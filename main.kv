@@ -1,0 +1,499 @@
+MDScreen:
+    MDBottomNavigation:
+        id: panel
+        MDBottomNavigationItem:
+            name: "Screen1"
+            text: "Large Display"
+            icon: "monitor"
+            MDScreen:
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        text: "[font=material]" + app.signal_icon + "[/font]SDR: RTL | LNA: 48 | SR: 2.e6"
+                        markup: True
+                        font_size: '30sp'
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+
+                    Label:
+                        text: '========== ' + app.time_text + ' =========='
+                        font_name: 'digital'  # Use a monospaced font
+                        font_size: '30sp'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        halign: 'left'  # Left-align text
+                        valign: 'middle'
+
+                    Label:
+                        text: 'Not Connected'
+                        id: connected_msg
+                        font_name: 'digital'
+                        font_size: '25sp'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        halign: 'left'  # Left-align text
+                        valign: 'middle'
+                        #on_touch_down: app.start_thread()
+
+                    Widget:  # This widget takes the remaining space
+
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height  # Adjusts height to the content
+                        padding: [100, 0]
+                        pos_hint: {'center_y': 0.5}  # Centers the BoxLayout vertically
+
+                        BoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height  # Adjusts height to the content
+
+
+                            Label:
+                                text: 'Ashtabula County'
+                                id: system_county
+                                font_name: 'digital'
+                                font_size: '50sp'
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                halign: 'left'  # Left-align text
+                                valign: 'middle'
+
+
+                            Label:
+                                text: 'System Name'
+                                id: system_name
+                                font_name: 'digital'
+                                font_size: '50sp'
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                halign: 'left'  # Left-align text
+                                valign: 'middle'
+
+
+                            Label:
+                                text: 'No Active Call'
+                                id: current_talkgroup
+                                font_name: 'digital'
+                                font_size: '50sp'
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                halign: 'left'  # Left-align text
+                                valign: 'middle'
+
+
+                    Widget:  # This widget takes the remaining space
+
+
+        MDBottomNavigationItem:
+            name: "screen2"
+            text: "Detailed Display"
+            icon: "monitor-dashboard"
+
+
+
+        MDBottomNavigationItem:
+            name: "screen3"
+            text: "ScanGrid"
+            icon: "grid"
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                TabbedPanel:
+                    do_default_tab: False
+                    tab_height: sp(100)  # Adjust the tab height using sp units
+                    # tab_width: sp(150)  # Adjust the tab width using sp units
+                    tab_width: self.width / len(self.tab_list)
+
+                    TabbedPanelItem:
+                        text: 'Tab 1'
+                        GridLayout:
+                            cols: 3
+                            rows: 4
+                            spacing: 10
+                            padding: 10
+                            Button:
+                                text: 'Button 1'
+                            Button:
+                                text: 'Button 2'
+                            Button:
+                                text: 'Button 3'
+                            Button:
+                                text: 'Button 4'
+                            Button:
+                                text: 'Button 5'
+                            Button:
+                                text: 'Button 6'
+                            Button:
+                                text: 'Button 7'
+                            Button:
+                                text: 'Button 8'
+                            Button:
+                                text: 'Button 9'
+
+                    TabbedPanelItem:
+                        text: 'Tab 2'
+                        GridLayout:
+                            cols: 3
+                            rows: 4
+                            spacing: 10
+                            padding: 10
+                            Button:
+                                text: 'Button 10'
+                            Button:
+                                text: 'Button 11'
+                            Button:
+                                text: 'Button 12'
+                            Button:
+                                text: 'Button 13'
+                            Button:
+                                text: 'Button 14'
+                            Button:
+                                text: 'Button 15'
+                            Button:
+                                text: 'Button 16'
+                            Button:
+                                text: 'Button 17'
+                            Button:
+                                text: 'Button 18'
+
+                    TabbedPanelItem:
+                        text: 'Tab 3'
+                        GridLayout:
+                            cols: 3
+                            rows: 4
+                            spacing: 10
+                            padding: 10
+                            Button:
+                                text: 'Button 19'
+                            Button:
+                                text: 'Button 20'
+                            Button:
+                                text: 'Button 21'
+                            Button:
+                                text: 'Button 22'
+                            Button:
+                                text: 'Button 23'
+                            Button:
+                                text: 'Button 24'
+                            Button:
+                                text: 'Button 25'
+                            Button:
+                                text: 'Button 26'
+                            Button:
+                                text: 'Button 27'
+
+                    TabbedPanelItem:
+                        text: 'Tab 4'
+                        GridLayout:
+                            cols: 3
+                            rows: 4
+                            spacing: 10
+                            padding: 10
+                            Button:
+                                text: 'Button 28'
+                            Button:
+                                text: 'Button 29'
+                            Button:
+                                text: 'Button 30'
+                            Button:
+                                text: 'Button 31'
+                            Button:
+                                text: 'Button 32'
+                            Button:
+                                text: 'Button 33'
+                            Button:
+                                text: 'Button 34'
+                            Button:
+                                text: 'Button 35'
+                            Button:
+                                text: 'Button 36'
+
+                    TabbedPanelItem:
+                        text: 'Tab 5'
+                        GridLayout:
+                            cols: 3
+                            rows: 4
+                            spacing: 10
+                            padding: 10
+                            Button:
+                                text: 'Button 37'
+                            Button:
+                                text: 'Button 38'
+                            Button:
+                                text: 'Button 39'
+                            Button:
+                                text: 'Button 40'
+                            Button:
+                                text: 'Button 41'
+                            Button:
+                                text: 'Button 42'
+                            Button:
+                                text: 'Button 43'
+                            Button:
+                                text: 'Button 44'
+                            Button:
+                                text: 'Button 45'
+
+                    TabbedPanelItem:
+                        text: 'Tab 6'
+                        GridLayout:
+                            cols: 3
+                            rows: 4
+                            spacing: 10
+                            padding: 10
+                            Button:
+                                text: 'Button 46'
+                            Button:
+                                text: 'Button 47'
+                            Button:
+                                text: 'Button 48'
+                            Button:
+                                text: 'Button 49'
+                            Button:
+                                text: 'Button 50'
+                            Button:
+                                text: 'Button 51'
+                            Button:
+                                text: 'Button 52'
+                            Button:
+                                text: 'Button 53'
+                            Button:
+                                text: 'Button 54'
+
+
+        MDBottomNavigationItem:
+            name: "screen4"
+            text: "Site Details"
+            icon: "radio-tower"
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                Label:
+                    text: "󰽅󰆣󰆤"
+                    font_name: 'material'
+                    font_size: '30sp'
+                    size_hint_y: None
+                    height: 50  # Set the height of the label
+
+                Widget:
+                    size_hint_y: None
+                    height: 20  # This empty widget pushes the content below
+
+                BoxLayout:
+                    orientation: 'horizontal'
+
+                    BoxLayout:
+                        size_hint_x: 0.25  # 25% width
+                        orientation: 'vertical'
+                        Label:
+                            text: 'Left Box󱖙󱖘󱖚󱖗'
+                            font_name: 'material'
+                            font_size: '30sp'
+                            halign: 'center'
+
+                    BoxLayout:
+                        size_hint_x: 0.75  # 75% width
+                        orientation: 'vertical'
+                        Label:
+                            text: 'Site ID: 32\r\nRF ID: 032\r\nWACN: 0x234'
+                            markup: True
+                            font_size: '30sp'
+
+
+
+
+        MDBottomNavigationItem:
+            name: "screen5"
+            text: "Log"
+            icon: "file-document-multiple"
+
+            ScrollView:
+                id: log_scrollview
+
+                BoxLayout:
+                    id: log_box
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(10)
+                    spacing: dp(10)
+
+                    # Example of adding a label manually
+                    Label:
+                        text: "Initial log entry"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        font_size: '30sp'
+
+        MDBottomNavigationItem:
+            name: "screen6"
+            text: "Settings"
+            icon: "cog"
+            MDScreen:
+                ScrollView:
+                    TabbedPanel:
+                        do_default_tab: False
+                        tab_height: sp(50)  # Adjust the tab height using sp units
+                        # tab_width: sp(150)  # Adjust the tab width using sp units
+                        tab_width: self.width / len(self.tab_list)
+
+                        TabbedPanelItem:
+                            text: 'Local Config'
+                            ScrollView:
+                                GridLayout:
+                                    id: settings_grid
+                                    cols: 2
+                                    padding: "10dp"
+                                    spacing: "10dp"
+                                    size_hint_y: None
+                                    height: self.minimum_height
+
+                                    Label:
+                                        text: "OP25_SERVER"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDTextField:
+                                        id: op25_server_textbox
+                                        hint_text: "Enter OP25_SERVER address"
+                                        helper_text: "OP25_SERVER"
+                                        helper_text_mode: "on_focus"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        multiline: False
+
+                                    Label:
+                                        text: "TIME24"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDCheckbox:
+                                        id: time24_checkbox
+                                        size_hint_y: None
+                                        height: "40dp"
+
+                                    Label:
+                                        text: "Dark Mode"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDCheckbox:
+                                        id: darkmode_checkbox
+                                        size_hint_y: None
+                                        height: "40dp"
+
+                                    Button:
+                                        text: "Update Config"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        on_release: app.update_config()  # Call update_config method
+
+                        TabbedPanelItem:
+                            text: 'OP25 Config'
+                            ScrollView:
+                                GridLayout:
+                                    id: settings_grid
+                                    cols: 2
+                                    padding: "10dp"
+                                    spacing: "10dp"
+                                    size_hint_y: None
+                                    height: self.minimum_height
+
+                                    Label:
+                                        text: "System Name"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDTextField:
+                                        #id: op25_server_textbox
+                                        hint_text: "Ohio MARCS"
+                                        id: op25_config_sysname
+                                        #helper_text: "OP25_SERVER"
+                                        helper_text_mode: "on_focus"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        multiline: False
+
+                                    Label:
+                                        text: "Site Name"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDTextField:
+                                        #id: op25_server_textbox
+                                        hint_text: "Ashtabula"
+                                        #helper_text: "OP25_SERVER"
+                                        helper_text_mode: "on_focus"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        multiline: False
+
+                                    Label:
+                                        text: "Comma Seperated Control Channel Frequencies"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDTextField:
+                                        id: op25_config_controlchannels
+                                        hint_text: "123.145678, 123.145678, 123.145678"
+                                        #helper_text: "OP25_SERVER"
+                                        helper_text_mode: "on_focus"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        multiline: False
+
+                                    Label:
+                                        text: "TalkGroup List"
+                                        id: op25_config_talkgroup_list
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDTextField:
+                                        #id: op25_server_textbox
+                                        hint_text: "ashtabula.tsv"
+                                        #helper_text: "OP25_SERVER"
+                                        helper_text_mode: "on_focus"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        multiline: False
+
+                                    Button:
+                                        text: "Read Config"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        on_release: app.read_op25_settings()
+
+                                    Button:
+                                        text: "Write Config"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        on_release: app.update_op25_settings()
+
+
+
+                        TabbedPanelItem:
+                            text: 'Tab 3'
+                            GridLayout:
+                        TabbedPanelItem:
+                            text: 'Tab 4'
+                            GridLayout:
