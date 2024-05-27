@@ -14,12 +14,25 @@ It wasn't all that mobile friendly imo. You can find it here: https://github.com
 
 As I learn more about Kivy I've been wanting to re-write the application and re-implement all the best features of the original.
 
+## How To Use It
+
+1. Setup your raspberry pi, we're testing on Raspbian Lite Bookworm (Latest as of 5/27/2024)
+2. Download and run setup_raspberrypi.sh
+   * Note that this will take a LONG LONG time.
+   * It creates a new user
+   * Creates the OP25 Service
+   * Sets up Hotspot to connect app with (Password is: MobileControlHead)
+   * Downloads OP25 with my server inside the apps directory
+   * Reboots the pi
+3. Download and install the app from the releases page
+4. 
+
 ## Current Freatures Implemented
 
 * Basic display with talkgroup and system name details
 * Garbage signals icon based on tsbks (don't pay it any mind... it's crap)
 * Basic config options for OP25 Instance and Clock Options (Restart to Take Effect)
-* Some mock up crap
+* Some Moc info
 
 ## Future Features
 
