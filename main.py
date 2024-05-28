@@ -62,7 +62,7 @@ class MainApp(MDApp):
     def update_op25_settings(self):
         cc_list = self.root.ids.op25_config_controlchannels.text
         sysname = self.root.ids.op25_config_sysname.text
-        tglist = self.root.ids.op25_config_talkgroup_list.textx1
+        tglist = self.root.ids.op25_config_talkgroup_list.text
         self.op25client.send_cmd_to_op25(command=f"WRITE_CONFIG;Control Channel List: {cc_list}, Sysname: {sysname}, Talkgroup List Name: {tglist}")
 
 
