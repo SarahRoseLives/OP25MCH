@@ -17,7 +17,8 @@ As I learn more about Kivy I've been wanting to re-write the application and re-
 ## How To Use It
 
 1. Setup your raspberry pi, we're testing on Raspbian Lite Bookworm (Latest as of 5/27/2024)
-2. Download and run setup_raspberrypi.sh
+   2. Skip the next step if you use this image instead: 
+2. Download and run setup_raspberrypi.sh (Backup Your Stuff! Seriously)
    * Note that this will take a LONG LONG time.
    * It creates a new user
    * Creates the OP25 Service
@@ -25,7 +26,6 @@ As I learn more about Kivy I've been wanting to re-write the application and re-
    * Downloads OP25 with my server inside the apps directory
    * Reboots the pi
 3. Download and install the app from the releases page
-4. 
 
 ## Current Freatures Implemented
 
