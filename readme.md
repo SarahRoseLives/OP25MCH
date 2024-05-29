@@ -6,6 +6,8 @@ This is easiy my biggest and most ambitiously complicated project I've ever work
 The original application was written in TKinter with python and supported night mode, scanning select talkgroups in a simple mannor, automatic
 gps switching, radio reference importing and so much more.
 
+https://youtu.be/LAmJmRco71s
+
 It did this by running a server that manipulates the OP25 instance and it's configuration files.
 However this application didn't translate well to Android. You can find it here: https://github.com/KR0SIV/op25mobileControlHead
 
