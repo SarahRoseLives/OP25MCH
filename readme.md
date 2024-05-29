@@ -41,3 +41,7 @@ As I learn more about Kivy I've been wanting to re-write the application and re-
 * Automatic Site Switching Within a System
 * "ScanGrid" Allowing you to set channels to scan specifically on the fly
 * A docker server instance to handle op25 and custom commands to implement above features
+
+## Support Me and Development
+I'm putting a lot of time into this application, any support would be greatly appreciated.
+https://www.patreon.com/SarahRoseLives
