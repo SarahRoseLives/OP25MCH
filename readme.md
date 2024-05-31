@@ -19,8 +19,7 @@ As I learn more about Kivy I've been wanting to re-write the application and re-
 ## How To Use It
 
 1. Setup your raspberry pi, we're testing on Raspbian Lite Bookworm (Latest as of 5/27/2024)
-   2. Skip the next step if you use this image instead: https://mega.nz/file/GVdmHCyZ#YEzoUWxMdqsqHO8FFgzyPJzrthHx9cy6uFr6C0GKt7Y
-2. Download and run setup_raspberrypi.sh (Backup Your Stuff! Seriously)
+2. Download and run new_installscript.sh (Backup Your Stuff! Seriously)
    * Note that this will take a LONG LONG time.
    * It creates a new user
    * Creates the OP25 Service
