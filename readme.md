@@ -47,3 +47,6 @@ As I learn more about Kivy I've been wanting to re-write the application and re-
 ## Support Me and Development
 I'm putting a lot of time into this application, any support would be greatly appreciated.
 https://www.patreon.com/SarahRoseLives
+
+## LICENSE
+This project is licensed under the [MIT License](./LICENSE).
