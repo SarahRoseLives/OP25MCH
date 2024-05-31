@@ -116,23 +116,23 @@ MDScreen:
                             rows: 4
                             spacing: 10
                             padding: 10
-                            Button:
+                            ToggleButton:
                                 text: 'Button 1'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 2'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 3'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 4'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 5'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 6'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 7'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 8'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 9'
 
                     TabbedPanelItem:
@@ -142,23 +142,23 @@ MDScreen:
                             rows: 4
                             spacing: 10
                             padding: 10
-                            Button:
+                            ToggleButton:
                                 text: 'Button 10'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 11'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 12'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 13'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 14'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 15'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 16'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 17'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 18'
 
                     TabbedPanelItem:
@@ -168,23 +168,23 @@ MDScreen:
                             rows: 4
                             spacing: 10
                             padding: 10
-                            Button:
+                            ToggleButton:
                                 text: 'Button 19'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 20'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 21'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 22'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 23'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 24'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 25'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 26'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 27'
 
                     TabbedPanelItem:
@@ -194,23 +194,23 @@ MDScreen:
                             rows: 4
                             spacing: 10
                             padding: 10
-                            Button:
+                            ToggleButton:
                                 text: 'Button 28'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 29'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 30'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 31'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 32'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 33'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 34'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 35'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 36'
 
                     TabbedPanelItem:
@@ -220,23 +220,23 @@ MDScreen:
                             rows: 4
                             spacing: 10
                             padding: 10
-                            Button:
+                            ToggleButton:
                                 text: 'Button 37'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 38'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 39'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 40'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 41'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 42'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 43'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 44'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 45'
 
                     TabbedPanelItem:
@@ -246,23 +246,23 @@ MDScreen:
                             rows: 4
                             spacing: 10
                             padding: 10
-                            Button:
+                            ToggleButton:
                                 text: 'Button 46'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 47'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 48'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 49'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 50'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 51'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 52'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 53'
-                            Button:
+                            ToggleButton:
                                 text: 'Button 54'
 
 
@@ -355,20 +355,53 @@ MDScreen:
                                     height: self.minimum_height
 
                                     Label:
-                                        text: "OP25_SERVER"
+                                        text: "OP25_IP"
                                         size_hint_y: None
                                         height: "40dp"
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
                                     MDTextField:
-                                        id: op25_server_textbox
-                                        hint_text: "Enter OP25_SERVER address"
-                                        helper_text: "OP25_SERVER"
+                                        id: op25_ip_textbox
+                                        hint_text: "Enter OP25_IP address"
+                                        helper_text: "OP25_IP"
                                         helper_text_mode: "on_focus"
                                         size_hint_y: None
                                         height: "40dp"
                                         multiline: False
+
+                                    Label:
+                                        text: "OP25_PORT"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDTextField:
+                                        id: op25_port_textbox
+                                        hint_text: "Enter OP25_PORT"
+                                        helper_text: "OP25_PORT"
+                                        helper_text_mode: "on_focus"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        multiline: False
+
+                                    Label:
+                                        text: "MCH_PORT"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    MDTextField:
+                                        id: mch_port_textbox
+                                        hint_text: "Enter MCH_PORT"
+                                        helper_text: "MCH_PORT"
+                                        helper_text_mode: "on_focus"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        multiline: False
+
 
                                     Label:
                                         text: "TIME24"
@@ -462,14 +495,13 @@ MDScreen:
 
                                     Label:
                                         text: "TalkGroup List"
-                                        id: op25_config_talkgroup_list
                                         size_hint_y: None
                                         height: "40dp"
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
                                     MDTextField:
-                                        #id: op25_server_textbox
+                                        id: op25_config_talkgroup_list
                                         hint_text: "ashtabula.tsv"
                                         #helper_text: "OP25_SERVER"
                                         helper_text_mode: "on_focus"
@@ -492,7 +524,7 @@ MDScreen:
 
 
                         TabbedPanelItem:
-                            text: 'Tab 3'
+                            text: 'ScanGrid'
                             GridLayout:
                         TabbedPanelItem:
                             text: 'Tab 4'

@@ -1,7 +1,12 @@
 import time
 import requests
-import socket
 import threading
+from resources.config import configure
+
+config = configure.Configure('resources/config/config.ini')
+
+op25_ip = config.get(section='RCH', option='op25_ip')
+mch_port = config.get(section='RCH', option='mch_port')
 
 
 class OP25Client:
@@ -93,28 +98,31 @@ class OP25Client:
             self.callback(latest_values)
             time.sleep(2)
 
-    def send_cmd_to_op25(self, command):
-        host = '192.168.4.1'
-        port = 8081
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def send_cmd_to_op25(self, endpoint, method="GET", data=None):
+        url = f"http://{op25_ip}:{mch_port}/{endpoint}"
         try:
-            try:
-                client.connect((host, port))
-                client.send(command.encode())
-                response = client.recv(1024).decode()
+            if method == "GET":
+                response = requests.get(url)
+            elif method == "POST":
+                response = requests.post(url, json=data)  # Use the json parameter
+            else:
+                return 'FAIL'
+
+            if response.status_code == 200:
                 print('[DEBUG] Connecting to OP25 server')
-                return response
-            finally:
-                client.close()
-        except:
+                return response.json().get("response", "FAIL")
+            else:
+                return 'FAIL'
+        except requests.RequestException:
             return 'FAIL'
 
     def start_op25(self):
         while not self.stop_event.is_set():
-            response = self.send_cmd_to_op25('HELLO')
+            response = self.send_cmd_to_op25('hello')
             if 'HELLO' in response:
                 print(response)
-                start_response = self.send_cmd_to_op25('START_TEST')
+                command = {"command": "start_test"}
+                start_response = self.send_cmd_to_op25('start_test', method="POST", data=command)
                 if "ACK" in start_response:
                     print('Starting OP25')
                     return "ACK"
@@ -134,14 +142,15 @@ class OP25Client:
 
     def is_running(self):
         return self.thread is not None and self.thread.is_alive()
+
+
 # Example usage
 def process_latest_values(latest_values):
     print("Processing latest values:", latest_values)
 
+# if __name__ == "__main__":
+#     client = OP25Client("http://192.168.4.1:8080", process_latest_values)
+#     client.start()
 
-#if __name__ == "__main__":
-#    client = OP25Client("http://192.168.4.1:8080", process_latest_values)
-#    client.start()
-
-    # To stop the client, you can call:
-    # client.stop()
+#     # To stop the client, you can call:
+#     # client.stop()

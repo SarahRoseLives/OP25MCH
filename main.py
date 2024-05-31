@@ -7,6 +7,7 @@ from kivy.clock import Clock
 from kivy.core.text import LabelBase
 from random import random
 import time
+import json
 import re
 
 import updater
@@ -20,7 +21,10 @@ config = configure.Configure('resources/config/config.ini')
 
 TIME24 = config.get_bool(section='RCH', option='TIME24')
 darkmode_checkbox = config.get_bool(section='RCH', option='darkmode_checkbox')
-GLOBAL_OP25SERVER = config.get(section='RCH', option='OP25_SERVER')
+GLOBAL_OP25IP = config.get(section='RCH', option='op25_ip')
+GLOBAL_OP25PORT = config.get(section='RCH', option='op25_port')
+
+
 
 class MainApp(MDApp):
     time_text = StringProperty()
@@ -29,7 +33,7 @@ class MainApp(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.op25client = OP25Client(GLOBAL_OP25SERVER, self.process_latest_values)
+        self.op25client = OP25Client(f'http://{GLOBAL_OP25IP}:{GLOBAL_OP25PORT}', self.process_latest_values)
         self.is_active = False  # Flag to control data fetching
 
     def build(self):
@@ -54,34 +58,47 @@ class MainApp(MDApp):
 
     def update_config(self):
         config.set('RCH', 'TIME24', str(self.root.ids.time24_checkbox.active))
-        config.set('RCH', 'OP25_SERVER', self.root.ids.op25_server_textbox.text)
+        config.set('RCH', 'op25_ip', self.root.ids.op25_ip_textbox.text)
+        config.set('RCH', 'op25_port', self.root.ids.op25_port_textbox.text)
+        config.set('RCH', 'mch_port', self.root.ids.mch_port_textbox.text)
         config.set('RCH', 'darkmode_checkbox', str(self.root.ids.time24_checkbox.active))
 
-
-
     def update_op25_settings(self):
-        cc_list = self.root.ids.op25_config_controlchannels.text
-        sysname = self.root.ids.op25_config_sysname.text
-        tglist = self.root.ids.op25_config_talkgroup_list.text
-        self.op25client.send_cmd_to_op25(command=f"WRITE_CONFIG;Control Channel List: {cc_list}, Sysname: {sysname}, Talkgroup List Name: {tglist}")
+        command = {
+            "Control_Channel_List": self.root.ids.op25_config_controlchannels.text.strip(),
+            "Sysname": self.root.ids.op25_config_sysname.text.strip(),
+            "Talkgroup_List_Name": self.root.ids.op25_config_talkgroup_list.text.strip()
+        }
+
+        response = self.op25client.send_cmd_to_op25(endpoint='write_config', method='POST', data=command)
+        print(f'DEBUG: Server Response: {response}')
 
 
     def read_op25_settings(self):
-        response = self.op25client.send_cmd_to_op25(command="GET_CONFIG")
-        pattern = r"Control Channel List: (.*?), Sysname: (.*?), Talkgroup List Name: (.*)"
-        match = re.search(pattern, response)
-        print(response)
+        # Send command to get the current config
+        response = self.op25client.send_cmd_to_op25(endpoint='get_config', method='GET')
 
+        # Debug: Print the raw response for troubleshooting
+        print(f"Raw response: {response}")
+
+        # Update the pattern to handle the server response more accurately
+        pattern = r"Control Channel List:\s*(.*?)\s*Sysname:\s*(.*?)\s*Talkgroup List Name:\s*(.*)"
+
+        match = re.search(pattern, response)
         if match:
-            controlchannel = match.group(1)
-            sysname = match.group(2)
-            tglist = match.group(3)
-            print(f"Control Channel: {controlchannel}")
-            self.root.ids.op25_config_controlchannels.text = controlchannel
-            self.root.ids.op25_config_sysname.text = sysname
-            self.root.ids.op25_config_talkgroup_list.text = tglist
+            controlchannels = match.group(1).strip()
+            sysname = match.group(2).strip()
+            tglist = match.group(3).strip()
+
+            # Debug: Print extracted values
+            print(f"Control Channels: {controlchannels}")
             print(f"Sysname: {sysname}")
             print(f"Talkgroup List Name: {tglist}")
+
+            # Update the UI elements with the parsed values
+            self.root.ids.op25_config_controlchannels.text = controlchannels
+            self.root.ids.op25_config_sysname.text = sysname
+            self.root.ids.op25_config_talkgroup_list.text = tglist
         else:
             print("No match found")
 
@@ -96,7 +113,9 @@ class MainApp(MDApp):
             self.is_active = False
 
     def initialize_settings(self, *args):
-        self.root.ids.op25_server_textbox.text = config.get(section='RCH', option='OP25_SERVER')
+        self.root.ids.op25_ip_textbox.text = config.get(section='RCH', option='op25_ip')
+        self.root.ids.op25_port_textbox.text = config.get(section='RCH', option='op25_port')
+        self.root.ids.mch_port_textbox.text = config.get(section='RCH', option='mch_port')
         self.root.ids.time24_checkbox.active = config.get_bool(section='RCH', option='TIME24')
         self.root.ids.darkmode_checkbox.text = config.get(section='RCH', option='darkmode_checkbox')
 
@@ -179,7 +198,8 @@ class MainApp(MDApp):
     def add_log_entry(self, text):
         log_box = self.root.ids.log_box
         stamped_text = f'{time.time()}: {text}'
-        new_label = Label(text=stamped_text, font_size='20sp', size_hint_y=None, height=self.calculate_text_height(stamped_text))
+        new_label = Label(text=stamped_text, font_size='20sp', size_hint_y=None,
+                          height=self.calculate_text_height(stamped_text))
         log_box.add_widget(new_label)
         # Adjust the height of the log_box to accommodate the new entry
         log_box.height = sum(child.height for child in log_box.children)
