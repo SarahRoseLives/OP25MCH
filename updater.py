@@ -1,5 +1,6 @@
 import time
 import requests
+import socket
 import threading
 from resources.config import configure
 
@@ -98,35 +99,33 @@ class OP25Client:
             self.callback(latest_values)
             time.sleep(2)
 
-    def send_cmd_to_op25(self, endpoint, method="GET", data=None):
-        url = f"http://{op25_ip}:{mch_port}/{endpoint}"
+    def send_cmd_to_op25(self, command):
+        host = str(op25_ip)
+        port = int(mch_port)
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            if method == "GET":
-                response = requests.get(url)
-            elif method == "POST":
-                response = requests.post(url, json=data)  # Use the json parameter
-            else:
-                return 'FAIL'
-
-            if response.status_code == 200:
+            try:
+                client.connect((host, port))
+                client.send(command.encode())
+                response = client.recv(1024).decode()
                 print('[DEBUG] Connecting to OP25 server')
-                return response.json().get("response", "FAIL")
-            else:
-                return 'FAIL'
-        except requests.RequestException:
+                return response
+            finally:
+                client.close()
+        except:
             return 'FAIL'
 
     def start_op25(self):
         while not self.stop_event.is_set():
-            response = self.send_cmd_to_op25('hello')
+            response = self.send_cmd_to_op25('HELLO')
             if 'HELLO' in response:
                 print(response)
-                command = {"command": "start_test"}
-                start_response = self.send_cmd_to_op25('start_test', method="POST", data=command)
+                start_response = self.send_cmd_to_op25('START_TEST')
                 if "ACK" in start_response:
                     print('Starting OP25')
                     return "ACK"
             time.sleep(1)
+
 
     def start(self):
         if self.thread is None:

@@ -445,6 +445,48 @@ MDScreen:
                                     height: self.minimum_height
 
                                     Label:
+                                        text: "SDR Selection"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    Spinner:
+                                        id: sdr_spinner
+                                        text: "Choose an SDR"
+                                        values: ["RTL-SDR", "SDRplay", "HackRF", "Other"]
+                                        size_hint_y: None
+                                        height: "40dp"
+
+                                    Label:
+                                        text: "Sample Rate"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    Spinner:
+                                        id: sample_rate_spinner
+                                        text: "Choose a sample rate"
+                                        values: ["1.4msps", "2.6msps"]
+                                        size_hint_y: None
+                                        height: "40dp"
+
+                                    Label:
+                                        text: "Gain"
+                                        size_hint_y: None
+                                        height: "40dp"
+                                        halign: "right"
+                                        valign: "middle"  # Vertical alignment to center the text vertically
+
+                                    Spinner:
+                                        id: gain_spinner
+                                        text: "Choose a gain"
+                                        values: [str(i) for i in range(10, 51, 2)]
+                                        size_hint_y: None
+                                        height: "40dp"
+
+                                    Label:
                                         text: "System Name"
                                         size_hint_y: None
                                         height: "40dp"
@@ -527,5 +569,5 @@ MDScreen:
                             text: 'ScanGrid'
                             GridLayout:
                         TabbedPanelItem:
-                            text: 'Tab 4'
+                            text: 'Radio Reference'
                             GridLayout:
