@@ -36,6 +36,7 @@ class MainApp(MDApp):
         super().__init__(**kwargs)
         self.op25client = OP25Client(f'http://{GLOBAL_OP25IP}:{GLOBAL_OP25PORT}', self.process_latest_values)
         self.is_active = False  # Flag to control data fetching
+        self.sdr_info = "SDR: RTL | LNA: 48 | SR: 2.e6"  # Initialize the property
 
         self.sdr_spinner = Spinner(
             text="Choose an SDR",
@@ -135,6 +136,8 @@ class MainApp(MDApp):
         self.root.ids.sample_rate_spinner.text = config.get('SDR', 'samplerate')
         # Update UI With SDR gain from Config.ini
         self.root.ids.gain_spinner.text = config.get('SDR', 'gain')
+
+        # Update Large Display SDR Details
 
         # send a command to read trunk file and assign it to variable trunk_data
         trunk_data = self.op25client.send_cmd_to_op25('READ_TRUNK')
@@ -239,6 +242,13 @@ class MainApp(MDApp):
             if 'not connected' in status.lower():
                 self.root.ids.connected_msg.text = 'Connected to: OP25'
                 self.add_log_entry('Connected to: OP25')
+
+                # Update the SDR Info on Display
+                sdr = config.get(section='SDR', option='sdr')
+                gain = str(config.get(section='SDR', option='gain'))
+                sr = str(config.get(section='SDR', option='samplerate'))
+
+                self.sdr_info = f"SDR: {sdr} | LNA: {gain} | SR: {sr}"
         else:
             if 'Connected to: OP25' in status:
                 self.root.ids.connected_msg.text = 'Connecting...'

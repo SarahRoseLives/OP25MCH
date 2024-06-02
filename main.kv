@@ -9,7 +9,7 @@ MDScreen:
                 BoxLayout:
                     orientation: 'vertical'
                     MDLabel:
-                        text: "[font=material]" + app.signal_icon + "[/font]SDR: RTL | LNA: 48 | SR: 2.e6"
+                        text: "[font=material]" + app.signal_icon + "[/font]" + app.sdr_info
                         markup: True
                         font_size: '30sp'
                         halign: "center"
@@ -495,7 +495,7 @@ MDScreen:
 
                                     MDTextField:
                                         #id: op25_server_textbox
-                                        hint_text: "Ohio MARCS"
+                                        hint_text: "System Name Here"
                                         id: op25_config_sysname
                                         #helper_text: "OP25_SERVER"
                                         helper_text_mode: "on_focus"
@@ -512,7 +512,7 @@ MDScreen:
 
                                     MDTextField:
                                         #id: op25_server_textbox
-                                        hint_text: "Ashtabula"
+                                        hint_text: "Site Name Here"
                                         #helper_text: "OP25_SERVER"
                                         helper_text_mode: "on_focus"
                                         size_hint_y: None
@@ -521,6 +521,8 @@ MDScreen:
 
                                     Label:
                                         text: "Comma Seperated Control Channel Frequencies"
+                                        helper_text: "111.11111, 222.2222"
+                                        helper_text_mode: "on_focus"
                                         size_hint_y: None
                                         height: "40dp"
                                         halign: "right"
@@ -544,7 +546,7 @@ MDScreen:
 
                                     MDTextField:
                                         id: op25_config_talkgroup_list
-                                        hint_text: "ashtabula.tsv"
+                                        hint_text: "filename.tsv"
                                         #helper_text: "OP25_SERVER"
                                         helper_text_mode: "on_focus"
                                         size_hint_y: None
