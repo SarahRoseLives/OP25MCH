@@ -21,7 +21,7 @@ class OP25Client:
     def jsoncmd(self, command, arg1, arg2):
         try:
             payload = [{"command": command, "arg1": arg1, "arg2": arg2}]
-            response = requests.post(self.url, json=payload)
+            response = requests.post(self.url, json=payload, timeout=10)
 
             if response.status_code == 200:
                 self.connection_successful = True
@@ -100,31 +100,33 @@ class OP25Client:
             time.sleep(2)
 
     def send_cmd_to_op25(self, command):
-        host = str(op25_ip)
-        port = int(mch_port)
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
+
             try:
+                host = str(op25_ip)
+                port = int(mch_port)
+                client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
                 client.connect((host, port))
                 client.send(command.encode())
                 response = client.recv(1024).decode()
                 print('[DEBUG] Connecting to OP25 server')
                 return response
-            finally:
-                client.close()
-        except:
-            return 'FAIL'
+            except:
+                return 'FAIL'
 
     def start_op25(self):
-        while not self.stop_event.is_set():
-            response = self.send_cmd_to_op25('HELLO')
-            if 'HELLO' in response:
-                print(response)
-                start_response = self.send_cmd_to_op25('START_TEST')
-                if "ACK" in start_response:
-                    print('Starting OP25')
-                    return "ACK"
-            time.sleep(1)
+        try:
+            while not self.stop_event.is_set():
+                response = self.send_cmd_to_op25('HELLO')
+                if 'HELLO' in response:
+                    print(response)
+                    start_response = self.send_cmd_to_op25('START_TEST')
+                    if "ACK" in start_response:
+                        print('Starting OP25')
+                        return "ACK"
+                time.sleep(1)
+        except:
+            pass
 
 
     def start(self):

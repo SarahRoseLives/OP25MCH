@@ -63,15 +63,40 @@ MDScreen:
                                 valign: 'middle'
 
 
-                            Label:
-                                text: 'System Name'
-                                id: system_name
-                                font_name: 'digital'
-                                font_size: '50sp'
+                            BoxLayout:
+                                orientation: 'horizontal'
                                 size_hint_y: None
-                                height: self.texture_size[1]
-                                halign: 'left'  # Left-align text
-                                valign: 'middle'
+                                height: self.minimum_height
+
+                                MDRaisedButton:
+                                    text: "-"
+                                    theme_text_color: "Custom"
+                                    text_color: (0.5, 0.5, 0.5, 1)
+                                    md_bg_color: (0, 0, 0, 1)
+                                    size_hint_x: None
+                                    font_size: '50sp'
+                                    on_press: app.decrease_volume()
+                                    width: 50
+
+                                Label:
+                                    text: 'System Name'
+                                    id: system_name
+                                    font_name: 'digital'
+                                    font_size: '50sp'
+                                    size_hint_y: None
+                                    height: self.texture_size[1]
+                                    halign: 'left'  # Left-align text
+                                    valign: 'middle'
+
+                                MDRaisedButton:
+                                    text: "+"
+                                    theme_text_color: "Custom"
+                                    text_color: (0.5, 0.5, 0.5, 1)
+                                    md_bg_color: (0, 0, 0, 1)
+                                    size_hint_x: None
+                                    font_size: '50sp'
+                                    on_press: app.increase_volume()
+                                    width: 50
 
 
                             Label:
@@ -86,7 +111,6 @@ MDScreen:
 
 
                     Widget:  # This widget takes the remaining space
-
 
         MDBottomNavigationItem:
             name: "screen2"
@@ -361,7 +385,7 @@ MDScreen:
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
-                                    MDTextField:
+                                    TextInput:
                                         id: op25_ip_textbox
                                         hint_text: "Enter OP25_IP address"
                                         helper_text: "OP25_IP"
@@ -377,7 +401,7 @@ MDScreen:
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
-                                    MDTextField:
+                                    TextInput:
                                         id: op25_port_textbox
                                         hint_text: "Enter OP25_PORT"
                                         helper_text: "OP25_PORT"
@@ -393,7 +417,7 @@ MDScreen:
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
-                                    MDTextField:
+                                    TextInput:
                                         id: mch_port_textbox
                                         hint_text: "Enter MCH_PORT"
                                         helper_text: "MCH_PORT"
@@ -493,7 +517,7 @@ MDScreen:
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
-                                    MDTextField:
+                                    TextInput:
                                         #id: op25_server_textbox
                                         hint_text: "System Name Here"
                                         id: op25_config_sysname
@@ -510,7 +534,7 @@ MDScreen:
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
-                                    MDTextField:
+                                    TextInput:
                                         #id: op25_server_textbox
                                         hint_text: "Site Name Here"
                                         #helper_text: "OP25_SERVER"
@@ -528,7 +552,7 @@ MDScreen:
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
-                                    MDTextField:
+                                    TextInput:
                                         id: op25_config_controlchannels
                                         hint_text: "123.145678, 123.145678, 123.145678"
                                         #helper_text: "OP25_SERVER"
@@ -544,10 +568,9 @@ MDScreen:
                                         halign: "right"
                                         valign: "middle"  # Vertical alignment to center the text vertically
 
-                                    MDTextField:
+                                    TextInput:
                                         id: op25_config_talkgroup_list
                                         hint_text: "filename.tsv"
-                                        #helper_text: "OP25_SERVER"
                                         helper_text_mode: "on_focus"
                                         size_hint_y: None
                                         height: "40dp"
@@ -572,4 +595,84 @@ MDScreen:
                             GridLayout:
                         TabbedPanelItem:
                             text: 'Radio Reference'
-                            GridLayout:
+                            ScrollView:
+                                BoxLayout:
+                                    orientation: 'vertical'
+                                    padding: [20, 20, 20, 20]
+                                    spacing: 20
+                                    size_hint_y: None  # This allows the BoxLayout to expand
+                                    height: self.minimum_height  # Adjust height to the content
+
+                                    Label:
+                                        text: 'Radio Reference'
+                                        font_size: '24sp'
+                                        size_hint_y: None
+                                        height: self.texture_size[1]
+
+                                    GridLayout:
+                                        cols: 2
+                                        spacing: 20
+                                        size_hint_y: None  # This allows GridLayout to expand
+                                        height: self.minimum_height  # Adjust height to the content
+
+                                        Label:
+                                            text: 'Username'
+                                            size_hint_x: 0.3
+                                            size_hint_y: None
+                                            height: self.texture_size[1]
+                                        TextInput:
+                                            id: username
+                                            hint_text: "Radio Reference Username"
+                                            helper_text_mode: "on_focus"
+                                            multiline: False
+                                            size_hint_y: None
+                                            height: '40dp'
+
+                                        Label:
+                                            text: 'Password'
+                                            size_hint_x: 0.3
+                                            size_hint_y: None
+                                            height: self.texture_size[1]
+                                        TextInput:
+                                            id: password
+                                            hint_text: "Radio Refereence Password"
+                                            helper_text_mode: "on_focus"
+                                            multiline: False
+                                            password: True
+                                            size_hint_y: None
+                                            height: '40dp'
+
+                                        Label:
+                                            text: 'System ID'
+                                            size_hint_x: 0.3
+                                            size_hint_y: None
+                                            height: self.texture_size[1]
+                                        TextInput:
+                                            id: system_id
+                                            hint_text: "Numeric System ID from end of RR URL: 6643"
+                                            helper_text_mode: "on_focus"
+                                            multiline: False
+                                            size_hint_y: None
+                                            height: '40dp'
+
+                                        Label:
+                                            text: 'Site ID'
+                                            size_hint_x: 0.3
+                                            size_hint_y: None
+                                            height: self.texture_size[1]
+                                        TextInput:
+                                            hint_text: "Numeric Site ID from RR Page"
+                                            helper_text_mode: "on_focus"
+                                            id: site_id
+                                            multiline: False
+                                            size_hint_y: None
+                                            height: '40dp'
+
+                                    Widget:
+                                        size_hint_y: 0.5  # This will push the button down
+
+                                    Button:
+                                        text: 'Login & Create TalkGroup TSV File'
+                                        size_hint: (1, None)
+                                        height: '48dp'
+                                        #on_press: app.login_and_start_process()

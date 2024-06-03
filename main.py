@@ -159,6 +159,11 @@ class MainApp(MDApp):
             print("ERROR: Unable to read trunk from server")
 
 
+    def increase_volume(self):
+        self.op25client.send_cmd_to_op25(command="INCREASE_VOLUME")
+
+    def decrease_volume(self):
+        self.op25client.send_cmd_to_op25(command="DECREASE_VOLUME")
 
     def start_thread(self):
         if not self.op25client.is_running():
