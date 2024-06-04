@@ -21,7 +21,7 @@ class OP25Client:
     def jsoncmd(self, command, arg1, arg2):
         try:
             payload = [{"command": command, "arg1": arg1, "arg2": arg2}]
-            response = requests.post(self.url, json=payload, timeout=10)
+            response = requests.post(self.url, json=payload, timeout=1)
 
             if response.status_code == 200:
                 self.connection_successful = True
@@ -105,6 +105,7 @@ class OP25Client:
                 host = str(op25_ip)
                 port = int(mch_port)
                 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                client.settimeout(1)
 
                 client.connect((host, port))
                 client.send(command.encode())

@@ -82,11 +82,12 @@ class MainApp(MDApp):
 
         return root
 
+
+
     def delayed_theme_application(self, dt):
         self.set_dark_theme()
         # Load OP25 Settings with the theme delay
         self.read_op25_settings()
-
 
 
     def on_gain_selection(self, spinner, text):
