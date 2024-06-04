@@ -24,6 +24,7 @@ TIME24 = config.get_bool(section='RCH', option='TIME24')
 darkmode_checkbox = config.get_bool(section='RCH', option='darkmode_checkbox')
 GLOBAL_OP25IP = config.get(section='RCH', option='op25_ip')
 GLOBAL_OP25PORT = config.get(section='RCH', option='op25_port')
+GLOBAL_TAGS_ENABLED = False
 
 
 
@@ -151,6 +152,11 @@ class MainApp(MDApp):
             sysname = match.group(1)
             cclist = match.group(2)
             tglist = match.group(3)
+            if 'tsv' in tglist:
+                global GLOBAL_TAGS_ENABLED  # Declare global before assigning
+                GLOBAL_TAGS_ENABLED = True
+            else:
+                GLOBAL_TAGS_ENABLED = False
 
             # Set trunk details in the UI
             self.root.ids.op25_config_sysname.text = sysname
@@ -221,24 +227,41 @@ class MainApp(MDApp):
 
     def update_large_display(self, latest_values):
         try:
-            if latest_values is not None and 'trunk_update' in latest_values:
-                system_name = latest_values['change_freq'].get('system')
-                current_talkgroup = latest_values['change_freq'].get('tgid')
+            if GLOBAL_TAGS_ENABLED:
+                if latest_values is not None and 'trunk_update' in latest_values:
+                    system_name = latest_values['change_freq'].get('system')
+                    current_talkgroup = latest_values['change_freq'].get('tag')
 
-                active_tgids = []
-                for freq, freq_data in latest_values['trunk_update']['frequency_data'].items():
-                    active_tgids.extend(filter(None, freq_data['tgids']))
-
-                if system_name is not None:
-                    self.root.ids.system_name.text = system_name
-                if current_talkgroup is not None:
-                    if int(current_talkgroup) in active_tgids:
+                    # Check if current_talkgroup is an empty string
+                    if current_talkgroup != "":
                         self.root.ids.current_talkgroup.text = str(current_talkgroup)
                         self.add_log_entry(str(current_talkgroup))
                     else:
                         self.root.ids.current_talkgroup.text = "No Active Call"
+
+                    if system_name is not None:
+                        self.root.ids.system_name.text = system_name
+                else:
+                    self.root.ids.current_talkgroup.text = "No Active Call"
             else:
-                self.root.ids.current_talkgroup.text = "No Active Call"
+                if latest_values is not None and 'trunk_update' in latest_values:
+                    system_name = latest_values['change_freq'].get('system')
+                    current_talkgroup = latest_values['change_freq'].get('tgid')
+
+                    active_tgids = []
+                    for freq, freq_data in latest_values['trunk_update']['frequency_data'].items():
+                        active_tgids.extend(filter(None, freq_data['tgids']))
+
+                    if system_name is not None:
+                        self.root.ids.system_name.text = system_name
+                    if current_talkgroup is not None:
+                        if int(current_talkgroup) in active_tgids:
+                            self.root.ids.current_talkgroup.text = str(current_talkgroup)
+                            self.add_log_entry(str(current_talkgroup))
+                        else:
+                            self.root.ids.current_talkgroup.text = "No Active Call"
+                else:
+                    self.root.ids.current_talkgroup.text = "No Active Call"
         except Exception as e:
             print(f"Error updating large display: {e}")
 
