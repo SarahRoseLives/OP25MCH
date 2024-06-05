@@ -365,8 +365,20 @@ class MainApp(MDApp):
 
     @mainthread
     def on_location(self, **kwargs):
-        self.gps_location = '\n'.join([
-            '{}={}'.format(k, v) for k, v in kwargs.items()])
+        lat = kwargs.get('lat', None)
+        lon = kwargs.get('lon', None)
+        speed = kwargs.get('speed', None)
+        bearing = kwargs.get('bearing', None)
+        altitude = kwargs.get('altitude', None)
+        accuracy = kwargs.get('accuracy', None)
+
+        self.root.ids.lat.text = f"lat: {lat}"
+        self.root.ids.lon.text = f"lon: {lon}"
+        self.root.ids.speed.text = f"speed: {speed}"
+        self.root.ids.bearing.text = f"bearing: {bearing}"
+        self.root.ids.altitude.text = f"altitude: {altitude}"
+        self.root.ids.accuracy.text = f"accuracy: {accuracy}"
+
 
     @mainthread
     def on_status(self, stype, status):
