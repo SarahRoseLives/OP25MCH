@@ -112,11 +112,110 @@ MDScreen:
 
                     Widget:  # This widget takes the remaining space
 
+
+
         MDBottomNavigationItem:
             name: "screen2"
             text: "Detailed Display"
             icon: "monitor-dashboard"
 
+            BoxLayout:
+                orientation: "vertical"
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(10)
+
+                    Label:
+                        text: "Pi25 Mobile Control Head A NAC: 0x343 | WACN: 0xbee00 | SYSID: Sys ID: 0x348 "
+                        text_size: (None, None)
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        font_size: '20sp'
+                    Label:
+                        text: "Laketran CRT"
+                        text_size: (None, None)
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        font_size: '40sp'
+                    Label:
+                        text: "OMMRC: Lake"
+                        text_size: (None, None)
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        font_size: '40sp'
+                    Label:
+                        text: "Radio ID: 4351439"
+                        text_size: (None, None)
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        font_size: '20sp'
+                    Label:
+                        text: "TalkGroup ID: 27684"
+                        text_size: (None, None)
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        font_size: '20sp'
+
+
+                ScrollView:
+                    GridLayout:
+                        cols: 1
+                        size_hint_y: None
+                        height: self.minimum_height
+                        padding: dp(10)
+                        row_default_height: '40dp'  # Set the default height for each row
+
+                        Label:
+                            text: "Laketran CRT.276844351439...2022-05-20 14:32:18.398200"
+                            text_size: self.width, None
+                            text_align: 'left'
+                            valign: 'middle'
+                            font_size: '15sp'
+                        Label:
+                            text: "SkyTransit CRT.234567890123...2022-07-19 18:36:15.678700"
+                            text_size: self.width, None
+                            text_align: 'left'
+                            valign: 'middle'
+                            font_size: '15sp'
+                        Label:
+                            text: "UrbanShuttle CRT.678901234567...2023-04-25 13:11:29.789500"
+                            text_size: self.width, None
+                            text_align: 'left'
+                            valign: 'middle'
+                            font_size: '15sp'
+                        Label:
+                            text: "CityRide CRT.345678901234...2022-09-03 16:28:07.345600"
+                            text_size: self.width, None
+                            text_align: 'left'
+                            valign: 'middle'
+                            font_size: '15sp'
+                        Label:
+                            text: "TransitX CRT.987654321098...2024-01-10 11:55:44.901200"
+                            text_size: self.width, None
+                            text_align: 'left'
+                            valign: 'middle'
+                            font_size: '15sp'
+                        Label:
+                            text: "RapidBus CRT.123456789012...2023-02-28 08:03:22.556300"
+                            text_size: self.width, None
+                            text_align: 'left'
+                            valign: 'middle'
+                            font_size: '15sp'
+                        Label:
+                            text: "MetroTrans CRT.509876543210...2022-11-15 17:20:50.123400"
+                            text_size: self.width, None
+                            text_align: 'left'
+                            valign: 'middle'
+                            font_size: '15sp'
+                        Label:
+                            text: "TramWay CRT.890123456789...2023-10-30 10:02:38.012600"
+                            text_size: self.width, None
+                            text_align: 'left'
+                            valign: 'middle'
+                            font_size: '15sp'
 
 
         MDBottomNavigationItem:
@@ -129,7 +228,7 @@ MDScreen:
 
                 TabbedPanel:
                     do_default_tab: False
-                    tab_height: sp(100)  # Adjust the tab height using sp units
+                    tab_height: sp(75)  # Adjust the tab height using sp units
                     # tab_width: sp(150)  # Adjust the tab width using sp units
                     tab_width: self.width / len(self.tab_list)
 
@@ -328,6 +427,26 @@ MDScreen:
                             text: 'Site ID: 32\r\nRF ID: 032\r\nWACN: 0x234'
                             markup: True
                             font_size: '30sp'
+
+                    BoxLayout:
+                        orientation: 'vertical'
+
+                        Label:
+                            text: app.gps_location
+
+                        Label:
+                            text: app.gps_status
+
+                        BoxLayout:
+                            size_hint_y: None
+                            height: '48dp'
+                            padding: '4dp'
+
+                            ToggleButton:
+                                text: 'Start' if self.state == 'normal' else 'Stop'
+                                on_state:
+                                    app.start(1000, 0) if self.state == 'down' else \
+                                    app.stop()
 
 
 

@@ -44,6 +44,10 @@ Run Options 2 and 3. Only 1 if you need to update pi firmware.
 * Basic display with talkgroup and system name details
 * Garbage signals icon based on tsbks (don't pay it any mind... it's crap)
 * Basic config options for OP25 Instance and Clock Options (Restart to Take Effect)
+* GPS Demo in prep for site switching
+* Radio Reference UI;Still Working on importing
+* Pi volume adjustment from large display
+* Ability to configure basic trunk.tsv from within app
 * Some Moc info
 
 ## Future Features

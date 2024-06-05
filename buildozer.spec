@@ -30,7 +30,7 @@ source.include_exts = py,png,jpg,kv,atlas,conf,ttf,ini
 # (list) List of directory to exclude (let empty to not exclude anything)
 source.exclude_dirs = tests, bin
 
-android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, WAKE_LOCK
+android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, WAKE_LOCK, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -44,7 +44,7 @@ version = 1.0.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3, kivy==2.3.0, https://files.pythonhosted.org/packages/20/81/0b1154f5e581d5910702d9fadb3217f56cb186f72c8b36de0271e7ff9b5c/kivymd-1.2.0.tar.gz, materialyoucolor, exceptiongroup, asyncgui, asynckivy, requests
+requirements = python3, kivy==2.3.0, https://files.pythonhosted.org/packages/20/81/0b1154f5e581d5910702d9fadb3217f56cb186f72c8b36de0271e7ff9b5c/kivymd-1.2.0.tar.gz, materialyoucolor, exceptiongroup, asyncgui, asynckivy, requests, plyer, android
 p4a.branch = develop
 
 # (str) Custom source folders for requirements
