@@ -1,27 +1,20 @@
 from kivymd.app import MDApp
 from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.properties import StringProperty
-from kivy.clock import Clock
+from kivy.clock import Clock, mainthread
 from kivy.core.text import LabelBase
-from random import random
-import time
 from kivy.uix.spinner import Spinner
-import json
-import re
-from kivy.clock import mainthread
 from kivy.utils import platform
 from plyer import gps
+import time
+import re
 
-
-import updater
-# Import the OP25Client class
+# Local Imports
 from updater import OP25Client
-
-# Local imports
 from resources.config import configure
 
+# Load config file
 config = configure.Configure('resources/config/config.ini')
 
 TIME24 = config.get_bool(section='RCH', option='TIME24')
@@ -31,11 +24,14 @@ GLOBAL_OP25PORT = config.get(section='RCH', option='op25_port')
 GLOBAL_TAGS_ENABLED = False
 
 
-
 class MainApp(MDApp):
     time_text = StringProperty()
     signal_icon = StringProperty()
     op25_server_address = StringProperty()
+
+    # GPS Stuff
+    gps_location = StringProperty()
+    gps_status = StringProperty('Click Start to get GPS location updates')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -43,6 +39,7 @@ class MainApp(MDApp):
         self.is_active = False  # Flag to control data fetching
         self.sdr_info = "SDR: RTL | LNA: 48 | SR: 2.e6"  # Initialize the property
 
+        # Spinners are the drop down boxes we use
         self.sdr_spinner = Spinner(
             text="Choose an SDR",
             values=["RTL-SDR", "SDRplay", "HackRF", "Other"],
@@ -68,23 +65,27 @@ class MainApp(MDApp):
         self.gain_spinner.bind(text=self.on_gain_selection)
 
 
-
     def build(self):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Purple"
         root = Builder.load_file("main.kv")
+
+        # Load our fonts
         LabelBase.register("digital", "resources/fonts/digital.ttf")
         LabelBase.register("material", "resources/fonts/material.ttf")
+
         self.system_county_label = root.ids.system_county
 
+        # Update stuff using clocks to prevent UI blcoking
         Clock.schedule_once(self.initialize_settings, 0.1)
         Clock.schedule_once(self.delayed_theme_application)
         Clock.schedule_interval(self.update_time, 1)
         Clock.schedule_interval(self.check_status_and_update, 5)
 
+        # This is the updater thread and it runs constant queries to OP25
         self.start_thread()
 
-        # GPS Stuff
+        # This is for our GPS
         try:
             gps.configure(on_location=self.on_location,
                           on_status=self.on_status)
@@ -101,18 +102,14 @@ class MainApp(MDApp):
         return root
 
 
-
+    # The dark theme is set after the UI loads and is done once on a clock
     def delayed_theme_application(self, dt):
-        self.set_dark_theme()
+        self.theme_cls.theme_style = "Dark"
         # Load OP25 Settings with the theme delay
         self.read_op25_settings()
 
 
-
-    # GPS Stuff
-    gps_location = StringProperty()
-    gps_status = StringProperty('Click Start to get GPS location updates')
-
+    # GPS Permissons for android
     def request_android_permissions(self):
         """
         Since API 23, Android requires permission to be requested at runtime.
@@ -139,11 +136,12 @@ class MainApp(MDApp):
                              Permission.ACCESS_FINE_LOCATION], callback)
 
 
-
+    # Gain spinner / dropdown
     def on_gain_selection(self, spinner, text):
         # Do something when the user selects a gain
         print(f"Selected gain: {text}")
 
+    # Samplerate Spinner / Dropdown
     def on_sample_rate_selection(self, spinner, text):
         if text == "1.4msps":
             sample_rate = 1.e4
@@ -152,10 +150,12 @@ class MainApp(MDApp):
         # Do something with the selected sample rate
         print(f"Selected sample rate: {sample_rate}")
 
+    # SDR Selection Spinner / Dropdown
     def on_sdr_selection(self, spinner, text):
         # Do something when the user selects an SDR option
         print(f"Selected SDR: {text}")
 
+    # Update config for local settings
     def update_config(self):
         config.set('RCH', 'TIME24', str(self.root.ids.time24_checkbox.active))
         config.set('RCH', 'op25_ip', self.root.ids.op25_ip_textbox.text)
@@ -163,6 +163,8 @@ class MainApp(MDApp):
         config.set('RCH', 'mch_port', self.root.ids.mch_port_textbox.text)
         config.set('RCH', 'darkmode_checkbox', str(self.root.ids.time24_checkbox.active))
 
+
+    # Update OP25 Specific settings
     def update_op25_settings(self):
         # Save the SDR Selection to Config.ini
         config.set('SDR', 'sdr', self.root.ids.sdr_spinner.text)
@@ -179,7 +181,7 @@ class MainApp(MDApp):
         self.op25client.send_cmd_to_op25(command=f'WRITE_TRUNK;sysname={sysname};cclist={cclist};tglist={tglist}')
 
 
-
+    # Read OP25 specific settings
     def read_op25_settings(self):
         # Update UI With SDR Selection from Config.ini
         self.root.ids.sdr_spinner.text = config.get('SDR', 'sdr')
@@ -214,10 +216,9 @@ class MainApp(MDApp):
         else:
             print("ERROR: Unable to read trunk from server")
 
-
+    # Increase and decrease volume commands
     def increase_volume(self):
         self.op25client.send_cmd_to_op25(command="INCREASE_VOLUME")
-
     def decrease_volume(self):
         self.op25client.send_cmd_to_op25(command="DECREASE_VOLUME")
 
@@ -231,6 +232,7 @@ class MainApp(MDApp):
             self.op25client.stop()
             self.is_active = False
 
+
     def initialize_settings(self, *args):
         self.root.ids.op25_ip_textbox.text = config.get(section='RCH', option='op25_ip')
         self.root.ids.op25_port_textbox.text = config.get(section='RCH', option='op25_port')
@@ -238,8 +240,7 @@ class MainApp(MDApp):
         self.root.ids.time24_checkbox.active = config.get_bool(section='RCH', option='TIME24')
         self.root.ids.darkmode_checkbox.text = config.get(section='RCH', option='darkmode_checkbox')
 
-    def set_dark_theme(self, *args):
-        self.theme_cls.theme_style = "Dark"
+
 
     def update_time(self, *args):
         if TIME24:
@@ -355,7 +356,7 @@ class MainApp(MDApp):
         label.texture_update()
         return label.texture_size[1]
 
-
+    # More GPS Functions
     def start(self, minTime, minDistance):
         gps.start(minTime, minDistance)
 

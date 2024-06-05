@@ -712,6 +712,8 @@ MDScreen:
                         TabbedPanelItem:
                             text: 'ScanGrid'
                             GridLayout:
+
+
                         TabbedPanelItem:
                             text: 'Radio Reference'
                             ScrollView:
@@ -722,76 +724,12 @@ MDScreen:
                                     size_hint_y: None  # This allows the BoxLayout to expand
                                     height: self.minimum_height  # Adjust height to the content
 
-                                    Label:
-                                        text: 'Radio Reference'
-                                        font_size: '24sp'
-                                        size_hint_y: None
-                                        height: self.texture_size[1]
-
-                                    GridLayout:
-                                        cols: 2
-                                        spacing: 20
-                                        size_hint_y: None  # This allows GridLayout to expand
-                                        height: self.minimum_height  # Adjust height to the content
-
-                                        Label:
-                                            text: 'Username'
-                                            size_hint_x: 0.3
-                                            size_hint_y: None
-                                            height: self.texture_size[1]
-                                        TextInput:
-                                            id: username
-                                            hint_text: "Radio Reference Username"
-                                            helper_text_mode: "on_focus"
-                                            multiline: False
-                                            size_hint_y: None
-                                            height: '40dp'
-
-                                        Label:
-                                            text: 'Password'
-                                            size_hint_x: 0.3
-                                            size_hint_y: None
-                                            height: self.texture_size[1]
-                                        TextInput:
-                                            id: password
-                                            hint_text: "Radio Refereence Password"
-                                            helper_text_mode: "on_focus"
-                                            multiline: False
-                                            password: True
-                                            size_hint_y: None
-                                            height: '40dp'
-
-                                        Label:
-                                            text: 'System ID'
-                                            size_hint_x: 0.3
-                                            size_hint_y: None
-                                            height: self.texture_size[1]
-                                        TextInput:
-                                            id: system_id
-                                            hint_text: "Numeric System ID from end of RR URL: 6643"
-                                            helper_text_mode: "on_focus"
-                                            multiline: False
-                                            size_hint_y: None
-                                            height: '40dp'
-
-                                        Label:
-                                            text: 'Site ID'
-                                            size_hint_x: 0.3
-                                            size_hint_y: None
-                                            height: self.texture_size[1]
-                                        TextInput:
-                                            hint_text: "Numeric Site ID from RR Page"
-                                            helper_text_mode: "on_focus"
-                                            id: site_id
-                                            multiline: False
-                                            size_hint_y: None
-                                            height: '40dp'
+                                    MDList:
+                                        id: list
+                                        TwoLineAvatarListItem:
+                                            text: "Radio Reference Credentials"
+                                            secondary_text: "Login Information Saved Here"
 
                                     Widget:
                                         size_hint_y: 0.5  # This will push the button down
 
-                                    Button:
-                                        text: 'Login & Create TalkGroup TSV File'
-                                        size_hint: (1, None)
-                                        height: '48dp'
-                                        #on_press: app.login_and_start_process()
