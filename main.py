@@ -1,3 +1,5 @@
+import configparser
+
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.label import Label
@@ -9,6 +11,9 @@ from kivy.utils import platform
 from plyer import gps
 import time
 import re
+import os
+
+from kivy.uix.screenmanager import Screen
 
 # Local Imports
 from updater import OP25Client
@@ -23,6 +28,45 @@ GLOBAL_OP25IP = config.get(section='RCH', option='op25_ip')
 GLOBAL_OP25PORT = config.get(section='RCH', option='op25_port')
 GLOBAL_TAGS_ENABLED = False
 
+# Screen Classes
+
+# Our Main Screen
+class Main(Screen):
+    pass
+
+class SettingsLocalConfig(Screen):
+    pass
+
+class SettingsOP25Config(Screen):
+    pass
+
+class SettingsScanGridConfig(Screen):
+    pass
+
+# Our Credentials screen for settings
+class SettingsRRCredentials(Screen):
+    # Stuff to do when entering this screen
+    def on_enter(self):
+        self.load_rr_credentials()
+
+    # Load our credentials into the screen
+    def load_rr_credentials(self):
+        config_path = 'resources/config/rr_credentials.ini'
+
+        if os.path.exists(config_path):
+            config = configparser.ConfigParser()
+            config.read(config_path)
+
+            if config.has_section('RadioReference'):
+                username = config.get('RadioReference', 'username', fallback='')
+                password = config.get('RadioReference', 'password', fallback='')
+
+                self.ids.username.text = username
+                self.ids.password.text = password
+            else:
+                print("Section 'RadioReference' not found in the config file.")
+        else:
+            print("Config file not found.")
 
 class MainApp(MDApp):
     time_text = StringProperty()
@@ -66,15 +110,17 @@ class MainApp(MDApp):
 
 
     def build(self):
-        self.theme_cls.theme_style = "Light"
-        self.theme_cls.primary_palette = "Purple"
+        #self.theme_cls.theme_style = "Light"
+        self.theme_cls.primary_palette = "Orange"
         root = Builder.load_file("main.kv")
+
 
         # Load our fonts
         LabelBase.register("digital", "resources/fonts/digital.ttf")
         LabelBase.register("material", "resources/fonts/material.ttf")
 
-        self.system_county_label = root.ids.system_county
+        self.system_county_label = root.get_screen('Main').ids.system_county
+
 
         # Update stuff using clocks to prevent UI blcoking
         Clock.schedule_once(self.initialize_settings, 0.1)
@@ -157,25 +203,25 @@ class MainApp(MDApp):
 
     # Update config for local settings
     def update_config(self):
-        config.set('RCH', 'TIME24', str(self.root.ids.time24_checkbox.active))
-        config.set('RCH', 'op25_ip', self.root.ids.op25_ip_textbox.text)
-        config.set('RCH', 'op25_port', self.root.ids.op25_port_textbox.text)
-        config.set('RCH', 'mch_port', self.root.ids.mch_port_textbox.text)
-        config.set('RCH', 'darkmode_checkbox', str(self.root.ids.time24_checkbox.active))
+        config.set('RCH', 'TIME24', str(self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active))
+        config.set('RCH', 'op25_ip', self.root.get_screen('SettingsLocalConfig').ids.op25_ip_textbox.text)
+        config.set('RCH', 'op25_port', self.root.get_screen('SettingsLocalConfig').ids.op25_port_textbox.text)
+        config.set('RCH', 'mch_port', self.root.get_screen('SettingsLocalConfig').ids.mch_port_textbox.text)
+        config.set('RCH', 'darkmode_checkbox', str(self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active))
 
 
     # Update OP25 Specific settings
     def update_op25_settings(self):
         # Save the SDR Selection to Config.ini
-        config.set('SDR', 'sdr', self.root.ids.sdr_spinner.text)
+        config.set('SDR', 'sdr', self.root.get_screen('SettingsOP25Config').ids.sdr_spinner.text)
         # Save the SDR Sample Rate to Config.ini
-        config.set('SDR', 'samplerate', self.root.ids.sample_rate_spinner.text)
+        config.set('SDR', 'samplerate', self.root.get_screen('SettingsOP25Config').ids.sample_rate_spinner.text)
         # Save the SDR gain to Config.ini
-        config.set('SDR', 'gain', self.root.ids.gain_spinner.text)
+        config.set('SDR', 'gain', self.root.get_screen('SettingsOP25Config').ids.gain_spinner.text)
 
-        sysname = self.root.ids.op25_config_sysname.text
-        cclist = self.root.ids.op25_config_controlchannels.text
-        tglist = self.root.ids.op25_config_talkgroup_list.text
+        sysname = self.root.get_screen('SettingsOP25Config').ids.op25_config_sysname.text
+        cclist = self.root.get_screen('SettingsOP25Config').ids.op25_config_controlchannels.text
+        tglist = self.root.get_screen('SettingsOP25Config').ids.op25_config_talkgroup_list.text
 
         # Take data in the trunk settings fields and send them to the server for updating
         self.op25client.send_cmd_to_op25(command=f'WRITE_TRUNK;sysname={sysname};cclist={cclist};tglist={tglist}')
@@ -184,11 +230,11 @@ class MainApp(MDApp):
     # Read OP25 specific settings
     def read_op25_settings(self):
         # Update UI With SDR Selection from Config.ini
-        self.root.ids.sdr_spinner.text = config.get('SDR', 'sdr')
+        self.root.get_screen('SettingsOP25Config').ids.sdr_spinner.text = config.get('SDR', 'sdr')
         # Update UI With SDR Sample Rate from Config.ini
-        self.root.ids.sample_rate_spinner.text = config.get('SDR', 'samplerate')
+        self.root.get_screen('SettingsOP25Config').ids.sample_rate_spinner.text = config.get('SDR', 'samplerate')
         # Update UI With SDR gain from Config.ini
-        self.root.ids.gain_spinner.text = config.get('SDR', 'gain')
+        self.root.get_screen('SettingsOP25Config').ids.gain_spinner.text = config.get('SDR', 'gain')
 
         # Update Large Display SDR Details
 
@@ -210,11 +256,45 @@ class MainApp(MDApp):
                 GLOBAL_TAGS_ENABLED = False
 
             # Set trunk details in the UI
-            self.root.ids.op25_config_sysname.text = sysname
-            self.root.ids.op25_config_controlchannels.text = cclist
-            self.root.ids.op25_config_talkgroup_list.text = tglist
+            self.root.get_screen('SettingsOP25Config').ids.op25_config_sysname.text = sysname
+            self.root.get_screen('SettingsOP25Config').ids.op25_config_controlchannels.text = cclist
+            self.root.get_screen('SettingsOP25Config').ids.op25_config_talkgroup_list.text = tglist
         else:
             print("ERROR: Unable to read trunk from server")
+
+
+    # Save Radio Refernce Credentials
+    def save_rr_credentials(self):
+        # Retrieve the credentials from the screen
+        username = self.root.get_screen('SettingsRRCredentials').ids.username.text
+        password = self.root.get_screen('SettingsRRCredentials').ids.password.text
+
+        # Path to the config file
+        config_path = 'resources/config/rr_credentials.ini'
+
+        # Ensure the config directory exists
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+
+        # Create a ConfigParser object
+        config = configparser.ConfigParser()
+
+        # Read existing config if the file exists
+        if os.path.exists(config_path):
+            config.read(config_path)
+
+        # Update or set the credentials in the 'RadioReference' section
+        if not config.has_section('RadioReference'):
+            config.add_section('RadioReference')
+
+        config.set('RadioReference', 'username', username)
+        config.set('RadioReference', 'password', password)
+
+        # Write the config to the file
+        with open(config_path, 'w') as configfile:
+            config.write(configfile)
+
+        # Return to main screen
+        self.root.current = 'Main'
 
     # Increase and decrease volume commands
     def increase_volume(self):
@@ -234,11 +314,11 @@ class MainApp(MDApp):
 
 
     def initialize_settings(self, *args):
-        self.root.ids.op25_ip_textbox.text = config.get(section='RCH', option='op25_ip')
-        self.root.ids.op25_port_textbox.text = config.get(section='RCH', option='op25_port')
-        self.root.ids.mch_port_textbox.text = config.get(section='RCH', option='mch_port')
-        self.root.ids.time24_checkbox.active = config.get_bool(section='RCH', option='TIME24')
-        self.root.ids.darkmode_checkbox.text = config.get(section='RCH', option='darkmode_checkbox')
+        self.root.get_screen('SettingsLocalConfig').ids.op25_ip_textbox.text = config.get(section='RCH', option='op25_ip')
+        self.root.get_screen('SettingsLocalConfig').ids.op25_port_textbox.text = config.get(section='RCH', option='op25_port')
+        self.root.get_screen('SettingsLocalConfig').ids.mch_port_textbox.text = config.get(section='RCH', option='mch_port')
+        self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active = config.get_bool(section='RCH', option='TIME24')
+        self.root.get_screen('SettingsLocalConfig').ids.darkmode_checkbox.text = config.get(section='RCH', option='darkmode_checkbox')
 
 
 
@@ -284,15 +364,15 @@ class MainApp(MDApp):
 
                     # Check if current_talkgroup is an empty string
                     if current_talkgroup != "":
-                        self.root.ids.current_talkgroup.text = str(current_talkgroup)
+                        self.root.get_screen('Main').ids.current_talkgroup.text = str(current_talkgroup)
                         self.add_log_entry(str(current_talkgroup))
                     else:
-                        self.root.ids.current_talkgroup.text = "No Active Call"
+                        self.root.get_screen('Main').ids.current_talkgroup.text = "No Active Call"
 
                     if system_name is not None:
-                        self.root.ids.system_name.text = system_name
+                        self.root.get_screen('Main').ids.system_name.text = system_name
                 else:
-                    self.root.ids.current_talkgroup.text = "No Active Call"
+                    self.root.get_screen('Main').ids.current_talkgroup.text = "No Active Call"
             else:
                 if latest_values is not None and 'trunk_update' in latest_values:
                     system_name = latest_values['change_freq'].get('system')
@@ -303,23 +383,23 @@ class MainApp(MDApp):
                         active_tgids.extend(filter(None, freq_data['tgids']))
 
                     if system_name is not None:
-                        self.root.ids.system_name.text = system_name
+                        self.root.get_screen('Main').ids.system_name.text = system_name
                     if current_talkgroup is not None:
                         if int(current_talkgroup) in active_tgids:
-                            self.root.ids.current_talkgroup.text = str(current_talkgroup)
+                            self.root.get_screen('Main').ids.current_talkgroup.text = str(current_talkgroup)
                             self.add_log_entry(str(current_talkgroup))
                         else:
-                            self.root.ids.current_talkgroup.text = "No Active Call"
+                            self.root.get_screen('Main').ids.current_talkgroup.text = "No Active Call"
                 else:
-                    self.root.ids.current_talkgroup.text = "No Active Call"
+                    self.root.get_screen('Main').ids.current_talkgroup.text = "No Active Call"
         except Exception as e:
             print(f"Error updating large display: {e}")
 
     def update_connection_status(self):
-        status = self.root.ids.connected_msg.text
+        status = self.root.get_screen('Main').ids.connected_msg.text
         if self.op25client.connection_successful:
             if 'not connected' in status.lower():
-                self.root.ids.connected_msg.text = 'Connected to: OP25'
+                self.root.get_screen('Main').ids.connected_msg.text = 'Connected to: OP25'
                 self.add_log_entry('Connected to: OP25')
 
                 # Update the SDR Info on Display
@@ -330,9 +410,9 @@ class MainApp(MDApp):
                 self.sdr_info = f"SDR: {sdr} | LNA: {gain} | SR: {sr}"
         else:
             if 'Connected to: OP25' in status:
-                self.root.ids.connected_msg.text = 'Connecting...'
+                self.root.get_screen('Main').ids.connected_msg.text = 'Connecting...'
             if 'Connecting...' in status:
-                self.root.ids.connected_msg.text = 'Not Connected'
+                self.root.get_screen('Main').ids.connected_msg.text = 'Not Connected'
                 self.add_log_entry('OP25 Connection Lost')
 
     def process_latest_values(self, latest_values):
@@ -340,14 +420,14 @@ class MainApp(MDApp):
         Clock.schedule_once(lambda dt: self.update_large_display(latest_values))
 
     def add_log_entry(self, text):
-        log_box = self.root.ids.log_box
+        log_box = self.root.get_screen('Main').ids.log_box
         stamped_text = f'{time.time()}: {text}'
         new_label = Label(text=stamped_text, font_size='20sp', size_hint_y=None,
                           height=self.calculate_text_height(stamped_text))
         log_box.add_widget(new_label)
         # Adjust the height of the log_box to accommodate the new entry
         log_box.height = sum(child.height for child in log_box.children)
-        self.root.ids.log_scrollview.scroll_y = 1  # Scroll to the top
+        self.root.get_screen('Main').ids.log_scrollview.scroll_y = 1  # Scroll to the top
 
     @staticmethod
     def calculate_text_height(text):
@@ -372,12 +452,12 @@ class MainApp(MDApp):
         altitude = kwargs.get('altitude', None)
         accuracy = kwargs.get('accuracy', None)
 
-        self.root.ids.lat.text = f"lat: {lat}"
-        self.root.ids.lon.text = f"lon: {lon}"
-        self.root.ids.speed.text = f"speed: {speed}"
-        self.root.ids.bearing.text = f"bearing: {bearing}"
-        self.root.ids.altitude.text = f"altitude: {altitude}"
-        self.root.ids.accuracy.text = f"accuracy: {accuracy}"
+        self.root.get_screen('Main').ids.lat.text = f"lat: {lat}"
+        self.root.get_screen('Main').ids.lon.text = f"lon: {lon}"
+        self.root.get_screen('Main').ids.speed.text = f"speed: {speed}"
+        self.root.get_screen('Main').ids.bearing.text = f"bearing: {bearing}"
+        self.root.get_screen('Main').ids.altitude.text = f"altitude: {altitude}"
+        self.root.get_screen('Main').ids.accuracy.text = f"accuracy: {accuracy}"
 
 
     @mainthread
@@ -391,6 +471,10 @@ class MainApp(MDApp):
     def on_resume(self):
         gps.start(1000, 0)
         pass
+
+    # Go back to main screen
+    def back_to_main(self):
+        self.root.current = 'Main'
 
 
 if __name__ == '__main__':

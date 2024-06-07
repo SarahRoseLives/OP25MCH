@@ -1,60 +1,100 @@
-MDScreen:
+ScreenManager:
+    id: screen_manager
+    Main:
+        name: 'Main'
+    SettingsOP25Config:
+        name: 'SettingsOP25Config'
+    SettingsLocalConfig:
+        name: 'SettingsLocalConfig'
+    SettingsScanGridConfig:
+        name: 'SettingsScanGridConfig'
+    SettingsRRCredentials:
+        name: 'SettingsRRCredentials'
+
+
+
+<Main@Screen>:
     MDBottomNavigation:
         id: panel
         MDBottomNavigationItem:
             name: "Screen1"
             text: "Large Display"
             icon: "monitor"
-            MDScreen:
+            BoxLayout:
+                orientation: 'vertical'
+                MDLabel:
+                    text: "[font=material]" + app.signal_icon + "[/font]" + app.sdr_info
+                    markup: True
+                    font_size: '30sp'
+                    halign: "center"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+                Label:
+                    text: '========== ' + app.time_text + ' =========='
+                    font_name: 'digital'  # Use a monospaced font
+                    font_size: '30sp'
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    halign: 'left'  # Left-align text
+                    valign: 'middle'
+
+                Label:
+                    text: 'Not Connected'
+                    id: connected_msg
+                    font_name: 'digital'
+                    font_size: '25sp'
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    halign: 'left'  # Left-align text
+                    valign: 'middle'
+                    #on_touch_down: app.start_thread()
+
+                Widget:  # This widget takes the remaining space
+
+
                 BoxLayout:
                     orientation: 'vertical'
-                    MDLabel:
-                        text: "[font=material]" + app.signal_icon + "[/font]" + app.sdr_info
-                        markup: True
-                        font_size: '30sp'
-                        halign: "center"
-                        size_hint_y: None
-                        height: self.texture_size[1]
-
-                    Label:
-                        text: '========== ' + app.time_text + ' =========='
-                        font_name: 'digital'  # Use a monospaced font
-                        font_size: '30sp'
-                        size_hint_y: None
-                        height: self.texture_size[1]
-                        halign: 'left'  # Left-align text
-                        valign: 'middle'
-
-                    Label:
-                        text: 'Not Connected'
-                        id: connected_msg
-                        font_name: 'digital'
-                        font_size: '25sp'
-                        size_hint_y: None
-                        height: self.texture_size[1]
-                        halign: 'left'  # Left-align text
-                        valign: 'middle'
-                        #on_touch_down: app.start_thread()
-
-                    Widget:  # This widget takes the remaining space
-
+                    size_hint_y: None
+                    height: self.minimum_height  # Adjusts height to the content
+                    padding: [100, 0]
+                    pos_hint: {'center_y': 0.5}  # Centers the BoxLayout vertically
 
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: None
                         height: self.minimum_height  # Adjusts height to the content
-                        padding: [100, 0]
-                        pos_hint: {'center_y': 0.5}  # Centers the BoxLayout vertically
+
+
+                        Label:
+                            text: 'Ashtabula County'
+                            id: system_county
+                            font_name: 'digital'
+                            font_size: '50sp'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            halign: 'left'  # Left-align text
+                            valign: 'middle'
+
 
                         BoxLayout:
-                            orientation: 'vertical'
+                            orientation: 'horizontal'
                             size_hint_y: None
-                            height: self.minimum_height  # Adjusts height to the content
+                            height: self.minimum_height
 
+                            MDRaisedButton:
+                                text: "-"
+                                theme_text_color: "Custom"
+                                text_color: (0.5, 0.5, 0.5, 1)
+                                md_bg_color: (0.0706, 0.0706, 0.0706, 1)
+                                size_hint_x: None
+                                font_size: '50sp'
+                                on_press: app.decrease_volume()
+                                width: 50
 
                             Label:
-                                text: 'Ashtabula County'
-                                id: system_county
+                                text: 'System Name'
+                                id: system_name
                                 font_name: 'digital'
                                 font_size: '50sp'
                                 size_hint_y: None
@@ -62,55 +102,29 @@ MDScreen:
                                 halign: 'left'  # Left-align text
                                 valign: 'middle'
 
-
-                            BoxLayout:
-                                orientation: 'horizontal'
-                                size_hint_y: None
-                                height: self.minimum_height
-
-                                MDRaisedButton:
-                                    text: "-"
-                                    theme_text_color: "Custom"
-                                    text_color: (0.5, 0.5, 0.5, 1)
-                                    md_bg_color: (0.0706, 0.0706, 0.0706, 1)
-                                    size_hint_x: None
-                                    font_size: '50sp'
-                                    on_press: app.decrease_volume()
-                                    width: 50
-
-                                Label:
-                                    text: 'System Name'
-                                    id: system_name
-                                    font_name: 'digital'
-                                    font_size: '50sp'
-                                    size_hint_y: None
-                                    height: self.texture_size[1]
-                                    halign: 'left'  # Left-align text
-                                    valign: 'middle'
-
-                                MDRaisedButton:
-                                    text: "+"
-                                    theme_text_color: "Custom"
-                                    text_color: (0.5, 0.5, 0.5, 1)
-                                    md_bg_color: (0.0706, 0.0706, 0.0706, 1)
-                                    size_hint_x: None
-                                    font_size: '50sp'
-                                    on_press: app.increase_volume()
-                                    width: 50
-
-
-                            Label:
-                                text: 'No Active Call'
-                                id: current_talkgroup
-                                font_name: 'digital'
+                            MDRaisedButton:
+                                text: "+"
+                                theme_text_color: "Custom"
+                                text_color: (0.5, 0.5, 0.5, 1)
+                                md_bg_color: (0.0706, 0.0706, 0.0706, 1)
+                                size_hint_x: None
                                 font_size: '50sp'
-                                size_hint_y: None
-                                height: self.texture_size[1]
-                                halign: 'left'  # Left-align text
-                                valign: 'middle'
+                                on_press: app.increase_volume()
+                                width: 50
 
 
-                    Widget:  # This widget takes the remaining space
+                        Label:
+                            text: 'No Active Call'
+                            id: current_talkgroup
+                            font_name: 'digital'
+                            font_size: '50sp'
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            halign: 'left'  # Left-align text
+                            valign: 'middle'
+
+
+                Widget:  # This widget takes the remaining space
 
 
 
@@ -502,314 +516,390 @@ MDScreen:
             icon: "cog"
             MDScreen:
                 ScrollView:
-                    TabbedPanel:
-                        do_default_tab: False
-                        tab_height: sp(50)  # Adjust the tab height using sp units
-                        # tab_width: sp(150)  # Adjust the tab width using sp units
-                        tab_width: self.width / len(self.tab_list)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: [20, 20, 20, 20]
+                        spacing: 20
+                        size_hint_y: None
+                        height: self.minimum_height
 
-                        TabbedPanelItem:
-                            text: 'Local Config'
-                            ScrollView:
-                                GridLayout:
-                                    id: settings_grid
-                                    cols: 2
-                                    padding: "10dp"
-                                    spacing: "10dp"
-                                    size_hint_y: None
-                                    height: self.minimum_height
+                        MDLabel:
+                            text: 'Main Settings'
+                            font_size: sp(25)
+                            text_size: self.size
+                            halign: 'left'
 
-                                    Label:
-                                        text: "OP25_IP"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
+                        MDList:
+                            id: list
+                            TwoLineAvatarListItem:
+                                text: "Local Config"
+                                secondary_text: "IP and Port Config"
+                                on_release: app.root.current = 'SettingsLocalConfig'
 
-                                    TextInput:
-                                        id: op25_ip_textbox
-                                        hint_text: "Enter OP25_IP address"
-                                        helper_text: "OP25_IP"
-                                        helper_text_mode: "on_focus"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        multiline: False
+                        MDList:
+                            id: list
+                            TwoLineAvatarListItem:
+                                text: "OP25 Config"
+                                secondary_text: "Manual Trunking Configuration"
+                                on_release: app.root.current = 'SettingsOP25Config'
 
-                                    Label:
-                                        text: "OP25_PORT"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
+                        MDList:
+                            id: list
+                            TwoLineAvatarListItem:
+                                text: "ScanGrid Config"
+                                secondary_text: "ScanGrid Configuration"
+                                on_release: app.root.current = 'SettingsScanGridConfig'
 
-                                    TextInput:
-                                        id: op25_port_textbox
-                                        hint_text: "Enter OP25_PORT"
-                                        helper_text: "OP25_PORT"
-                                        helper_text_mode: "on_focus"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        multiline: False
-
-                                    Label:
-                                        text: "MCH_PORT"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    TextInput:
-                                        id: mch_port_textbox
-                                        hint_text: "Enter MCH_PORT"
-                                        helper_text: "MCH_PORT"
-                                        helper_text_mode: "on_focus"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        multiline: False
-
-
-                                    Label:
-                                        text: "TIME24"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    MDCheckbox:
-                                        id: time24_checkbox
-                                        size_hint_y: None
-                                        height: "40dp"
-
-                                    Label:
-                                        text: "Dark Mode"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    MDCheckbox:
-                                        id: darkmode_checkbox
-                                        size_hint_y: None
-                                        height: "40dp"
-
-                                    Button:
-                                        text: "Update Config"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        on_release: app.update_config()  # Call update_config method
-
-                        TabbedPanelItem:
-                            text: 'OP25 Config'
-                            ScrollView:
-                                GridLayout:
-                                    id: settings_grid
-                                    cols: 2
-                                    padding: "10dp"
-                                    spacing: "10dp"
-                                    size_hint_y: None
-                                    height: self.minimum_height
-
-                                    Label:
-                                        text: "SDR Selection"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    Spinner:
-                                        id: sdr_spinner
-                                        text: "Choose an SDR"
-                                        values: ["RTL-SDR", "SDRplay", "HackRF", "Other"]
-                                        size_hint_y: None
-                                        height: "40dp"
-
-                                    Label:
-                                        text: "Sample Rate"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    Spinner:
-                                        id: sample_rate_spinner
-                                        text: "Choose a sample rate"
-                                        values: ["1.4msps", "2.6msps"]
-                                        size_hint_y: None
-                                        height: "40dp"
-
-                                    Label:
-                                        text: "Gain"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    Spinner:
-                                        id: gain_spinner
-                                        text: "Choose a gain"
-                                        values: [str(i) for i in range(10, 51, 2)]
-                                        size_hint_y: None
-                                        height: "40dp"
-
-                                    Label:
-                                        text: "System Name"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    TextInput:
-                                        #id: op25_server_textbox
-                                        hint_text: "System Name Here"
-                                        id: op25_config_sysname
-                                        #helper_text: "OP25_SERVER"
-                                        helper_text_mode: "on_focus"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        multiline: False
-
-                                    Label:
-                                        text: "Site Name"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    TextInput:
-                                        #id: op25_server_textbox
-                                        hint_text: "Site Name Here"
-                                        #helper_text: "OP25_SERVER"
-                                        helper_text_mode: "on_focus"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        multiline: False
-
-                                    Label:
-                                        text: "Comma Seperated Control Channel Frequencies"
-                                        helper_text: "111.11111, 222.2222"
-                                        helper_text_mode: "on_focus"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    TextInput:
-                                        id: op25_config_controlchannels
-                                        hint_text: "123.145678, 123.145678, 123.145678"
-                                        #helper_text: "OP25_SERVER"
-                                        helper_text_mode: "on_focus"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        multiline: False
-
-                                    Label:
-                                        text: "TalkGroup List"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        halign: "right"
-                                        valign: "middle"  # Vertical alignment to center the text vertically
-
-                                    TextInput:
-                                        id: op25_config_talkgroup_list
-                                        hint_text: "filename.tsv"
-                                        helper_text_mode: "on_focus"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        multiline: False
-
-                                    Button:
-                                        text: "Read Config"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        on_release: app.read_op25_settings()
-
-                                    Button:
-                                        text: "Write Config"
-                                        size_hint_y: None
-                                        height: "40dp"
-                                        on_release: app.update_op25_settings()
-
-
-
-                        TabbedPanelItem:
-                            text: 'ScanGrid'
-                            GridLayout:
-
-
-                        TabbedPanelItem:
+                        MDLabel:
                             text: 'Radio Reference'
-                            ScrollView:
-                                BoxLayout:
-                                    orientation: 'vertical'
-                                    padding: [20, 20, 20, 20]
-                                    spacing: 20
-                                    size_hint_y: None  # This allows the BoxLayout to expand
-                                    height: self.minimum_height  # Adjust height to the content
+                            font_size: sp(25)
+                            text_size: self.size
+                            halign: 'left'
 
-                                    GridLayout:
-                                        cols: 2
-                                        spacing: 20
-                                        size_hint_y: None  # This allows GridLayout to expand
-                                        height: self.minimum_height  # Adjust height to the content
+                        MDList:
+                            id: list
+                            TwoLineAvatarListItem:
+                                text: "Radio Reference Credentials"
+                                secondary_text: "Login Information Saved Here"
+                                on_release: app.root.current = 'SettingsRRCredentials'
 
-                                        Label:
-                                            text: 'Username'
-                                            size_hint_x: 0.3
-                                            size_hint_y: None
-                                            height: self.texture_size[1]
-                                        TextInput:
-                                            id: username
-                                            hint_text: "Radio Reference Username"
-                                            helper_text_mode: "on_focus"
-                                            multiline: False
-                                            size_hint_y: None
-                                            height: '40dp'
+                        Widget:
+                            size_hint_y: 0.5  # This will push the button down
 
-                                        Label:
-                                            text: 'Password'
-                                            size_hint_x: 0.3
-                                            size_hint_y: None
-                                            height: self.texture_size[1]
-                                        TextInput:
-                                            id: password
-                                            hint_text: "Radio Refereence Password"
-                                            helper_text_mode: "on_focus"
-                                            multiline: False
-                                            password: True
-                                            size_hint_y: None
-                                            height: '40dp'
 
-                                        Label:
-                                            text: 'System ID'
-                                            size_hint_x: 0.3
-                                            size_hint_y: None
-                                            height: self.texture_size[1]
-                                        TextInput:
-                                            id: system_id
-                                            hint_text: "Numeric System ID from end of RR URL: 6643"
-                                            helper_text_mode: "on_focus"
-                                            multiline: False
-                                            size_hint_y: None
-                                            height: '40dp'
 
-                                        Label:
-                                            text: 'Site ID'
-                                            size_hint_x: 0.3
-                                            size_hint_y: None
-                                            height: self.texture_size[1]
-                                        TextInput:
-                                            hint_text: "Numeric Site ID from RR Page"
-                                            helper_text_mode: "on_focus"
-                                            id: site_id
-                                            multiline: False
-                                            size_hint_y: None
-                                            height: '40dp'
+# Define the SettingsLocalConfig Screen
+<SettingsLocalConfig@Screen>:
+    BoxLayout:
+        orientation: 'vertical'
 
-                                    Widget:
-                                        size_hint_y: 0.5  # This will push the button down
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  # Equivalent to #000000 in RGB
+            Rectangle:
+                size: self.size
+                pos: self.pos
 
-                                    Button:
-                                        text: 'Login & Create TalkGroup TSV File'
-                                        size_hint: (1, None)
-                                        height: '48dp'
-                                        #on_press: app.login_and_start_process()
+        MDTopAppBar:
+            title: "Local Config"
+            left_action_items: [["arrow-left", lambda x: app.back_to_main()]]
+
+        ScrollView:
+            GridLayout:
+                id: settings_grid
+                cols: 2
+                padding: "10dp"
+                spacing: "10dp"
+                size_hint_y: None
+                height: self.minimum_height
+
+                Label:
+                    text: "OP25_IP"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                TextInput:
+                    id: op25_ip_textbox
+                    hint_text: "Enter OP25_IP address"
+                    helper_text: "OP25_IP"
+                    helper_text_mode: "on_focus"
+                    size_hint_y: None
+                    height: "40dp"
+                    multiline: False
+
+                Label:
+                    text: "OP25_PORT"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                TextInput:
+                    id: op25_port_textbox
+                    hint_text: "Enter OP25_PORT"
+                    helper_text: "OP25_PORT"
+                    helper_text_mode: "on_focus"
+                    size_hint_y: None
+                    height: "40dp"
+                    multiline: False
+
+                Label:
+                    text: "MCH_PORT"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                TextInput:
+                    id: mch_port_textbox
+                    hint_text: "Enter MCH_PORT"
+                    helper_text: "MCH_PORT"
+                    helper_text_mode: "on_focus"
+                    size_hint_y: None
+                    height: "40dp"
+                    multiline: False
+
+
+                Label:
+                    text: "TIME24"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                MDCheckbox:
+                    id: time24_checkbox
+                    size_hint_y: None
+                    height: "40dp"
+
+                Label:
+                    text: "Dark Mode"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                MDCheckbox:
+                    id: darkmode_checkbox
+                    size_hint_y: None
+                    height: "40dp"
+
+                Button:
+                    text: "Update Config"
+                    size_hint_y: None
+                    height: "40dp"
+                    on_release: app.update_config()  # Call update_config method
+
+
+# Define the SettingsOP25Config Screen
+<SettingsOP25Config@Screen>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  # Equivalent to #000000 in RGB
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        MDTopAppBar:
+            title: "OP25 Config"
+            left_action_items: [["arrow-left", lambda x: app.back_to_main()]]
+
+        ScrollView:
+            GridLayout:
+                id: settings_grid
+                cols: 2
+                padding: "10dp"
+                spacing: "10dp"
+                size_hint_y: None
+                height: self.minimum_height
+
+                Label:
+                    text: "SDR Selection"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                Spinner:
+                    id: sdr_spinner
+                    text: "Choose an SDR"
+                    values: ["RTL-SDR", "SDRplay", "HackRF", "Other"]
+                    size_hint_y: None
+                    height: "40dp"
+
+                Label:
+                    text: "Sample Rate"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                Spinner:
+                    id: sample_rate_spinner
+                    text: "Choose a sample rate"
+                    values: ["1.4msps", "2.6msps"]
+                    size_hint_y: None
+                    height: "40dp"
+
+                Label:
+                    text: "Gain"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                Spinner:
+                    id: gain_spinner
+                    text: "Choose a gain"
+                    values: [str(i) for i in range(10, 51, 2)]
+                    size_hint_y: None
+                    height: "40dp"
+
+                Label:
+                    text: "System Name"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                TextInput:
+                    #id: op25_server_textbox
+                    hint_text: "System Name Here"
+                    id: op25_config_sysname
+                    #helper_text: "OP25_SERVER"
+                    helper_text_mode: "on_focus"
+                    size_hint_y: None
+                    height: "40dp"
+                    multiline: False
+
+                Label:
+                    text: "Site Name"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                TextInput:
+                    #id: op25_server_textbox
+                    hint_text: "Site Name Here"
+                    #helper_text: "OP25_SERVER"
+                    helper_text_mode: "on_focus"
+                    size_hint_y: None
+                    height: "40dp"
+                    multiline: False
+
+                Label:
+                    text: "Comma Seperated Control Channel Frequencies"
+                    helper_text: "111.11111, 222.2222"
+                    helper_text_mode: "on_focus"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                TextInput:
+                    id: op25_config_controlchannels
+                    hint_text: "123.145678, 123.145678, 123.145678"
+                    #helper_text: "OP25_SERVER"
+                    helper_text_mode: "on_focus"
+                    size_hint_y: None
+                    height: "40dp"
+                    multiline: False
+
+                Label:
+                    text: "TalkGroup List"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                TextInput:
+                    id: op25_config_talkgroup_list
+                    hint_text: "filename.tsv"
+                    helper_text_mode: "on_focus"
+                    size_hint_y: None
+                    height: "40dp"
+                    multiline: False
+
+                Button:
+                    text: "Read Config"
+                    size_hint_y: None
+                    height: "40dp"
+                    on_release: app.read_op25_settings()
+
+                Button:
+                    text: "Write Config"
+                    size_hint_y: None
+                    height: "40dp"
+                    on_release: app.update_op25_settings()
+
+# Define the SettingsScanGridConfig Screen
+<SettingsScanGridConfig@Screen>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  # Equivalent to #000000 in RGB
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        MDTopAppBar:
+            title: "ScanGrid Config"
+            left_action_items: [["arrow-left", lambda x: app.back_to_main()]]
+
+        ScrollView:
+
+
+<SettingsRRCredentials@Screen>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  # Equivalent to #000000 in RGB
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        MDTopAppBar:
+            title: "Radio Reference Credentials"
+            left_action_items: [["arrow-left", lambda x: app.back_to_main()]]
+
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                padding: [20, 20, 20, 20]
+                spacing: 20
+                size_hint_y: None
+                height: self.minimum_height
+
+                GridLayout:
+                    cols: 2
+                    spacing: 20
+                    size_hint_y: None
+                    height: self.minimum_height
+
+                    Label:
+                        text: 'Username'
+                        size_hint_x: 0.3
+                        size_hint_y: None
+                        height: self.texture_size[1]
+
+                    TextInput:
+                        id: username
+                        hint_text: "Radio Reference Username"
+                        helper_text_mode: "on_focus"
+                        multiline: False
+                        size_hint_y: None
+                        height: '40dp'
+
+                    Label:
+                        text: 'Password'
+                        size_hint_x: 0.3
+                        size_hint_y: None
+                        height: self.texture_size[1]
+
+                    TextInput:
+                        id: password
+                        hint_text: "Radio Reference Password"
+                        helper_text_mode: "on_focus"
+                        multiline: False
+                        password: True
+                        size_hint_y: None
+                        height: '40dp'
+
+                Widget:
+                    size_hint_y: 0.5
+
+                Button:
+                    text: 'Save Credentials and Return to Settings'
+                    size_hint: (1, None)
+                    height: '48dp'
+                    on_press: app.save_rr_credentials()
