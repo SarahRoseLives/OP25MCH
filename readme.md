@@ -18,6 +18,9 @@ As I learn more about Kivy I've been wanting to re-write the application and re-
 
 ## How To Use It
 
+* Please Note: Install a fresh bookworm image, do NOT configure wifi details.
+* Script will add it's own user to start the service.
+
 1. Setup your raspberry pi, we're testing on Raspbian Lite Bookworm (Latest as of 5/27/2024)
 2. Download and run new_installscript.sh (Backup Your Stuff! Seriously)
 
@@ -57,6 +60,11 @@ Run Options 2 and 3. Only 1 if you need to update pi firmware.
 * Automatic Site Switching Within a System
 * "ScanGrid" Allowing you to set channels to scan specifically on the fly
 * A docker server instance to handle op25 and custom commands to implement above features
+
+## Credits
+
+* BoatBod - OP25 Fork - https://github.com/boatbod/op25/tree/gr310
+* SimpleMaps - ZipCode Database - https://simplemaps.com/data/us-zips
 
 ## Support Me and Development
 I'm putting a lot of time into this application, any support would be greatly appreciated.
