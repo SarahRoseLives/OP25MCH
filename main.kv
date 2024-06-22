@@ -10,6 +10,8 @@ ScreenManager:
         name: 'SettingsScanGridConfig'
     SettingsRRCredentials:
         name: 'SettingsRRCredentials'
+    SettingsRRImport:
+        name: 'SettingsRRImport'
 
 
 
@@ -65,16 +67,16 @@ ScreenManager:
                         size_hint_y: None
                         height: self.minimum_height  # Adjusts height to the content
 
-
                         Label:
-                            text: 'Ashtabula County'
-                            id: system_county
+                            text: 'System Name'
+                            id: system_name
                             font_name: 'digital'
                             font_size: '50sp'
                             size_hint_y: None
                             height: self.texture_size[1]
                             halign: 'left'  # Left-align text
                             valign: 'middle'
+
 
 
                         BoxLayout:
@@ -93,8 +95,8 @@ ScreenManager:
                                 width: 50
 
                             Label:
-                                text: 'System Name'
-                                id: system_name
+                                text: 'Manual TSV Loaded'
+                                id: system_county
                                 font_name: 'digital'
                                 font_size: '50sp'
                                 size_hint_y: None
@@ -469,6 +471,15 @@ ScreenManager:
                             text: 'Accuracy: '
                             id: accuracy
 
+                        Label:
+                            text: 'Nearest Zip: '
+                            id: nearest_zip
+
+                        Label:
+                            text: 'Nearest Site: '
+                            id: nearest_site
+
+
 
                         Label:
                             text: app.gps_status
@@ -563,6 +574,12 @@ ScreenManager:
                                 secondary_text: "Login Information Saved Here"
                                 on_release: app.root.current = 'SettingsRRCredentials'
 
+                        MDList:
+                            id: list
+                            TwoLineAvatarListItem:
+                                text: "Radio Reference Import"
+                                secondary_text: "Import a System"
+                                on_release: app.root.current = 'SettingsRRImport'
                         Widget:
                             size_hint_y: 0.5  # This will push the button down
 
@@ -818,6 +835,18 @@ ScreenManager:
                     height: "40dp"
                     on_release: app.update_op25_settings()
 
+                Button:
+                    text: "Start OP25"
+                    size_hint_y: None
+                    height: "40dp"
+                    on_release: app.op25client.manual_start_op25()
+
+                Button:
+                    text: "Stop OP25"
+                    size_hint_y: None
+                    height: "40dp"
+                    #on_release: app.op25client.manual_start_op25()
+
 # Define the SettingsScanGridConfig Screen
 <SettingsScanGridConfig@Screen>:
     BoxLayout:
@@ -903,3 +932,87 @@ ScreenManager:
                     size_hint: (1, None)
                     height: '48dp'
                     on_press: app.save_rr_credentials()
+
+
+<SettingsRRImport@Screen>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  # Equivalent to #000000 in RGB
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        MDTopAppBar:
+            title: "Import a System"
+            left_action_items: [["arrow-left", lambda x: app.back_to_main()]]
+
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                padding: [20, 20, 20, 20]
+                spacing: 20
+                size_hint_y: None
+                height: self.minimum_height
+
+                GridLayout:
+                    cols: 2
+                    spacing: 20
+                    size_hint_y: None
+                    height: self.minimum_height
+
+                    GridLayout:  # Wrap the TextInput and Button in a GridLayout
+                        cols: 3
+                        spacing: 20
+                        size_hint_y: None
+
+
+                        Label:
+                            text: 'Zip Code'
+                            size_hint_x: 0.3
+                            size_hint_y: None
+                            height: self.texture_size[1]
+
+                        TextInput:
+                            id: zipcode
+                            hint_text: "Zip code"
+                            helper_text_mode: "on_focus"
+                            multiline: False
+                            size_hint_y: None
+                            height: '40dp'
+
+                        Button:
+                            text: "[font=material]󰤉[/font]"
+                            markup: True
+                            size_hint_y: None
+                            height: '40dp'
+                            font_size: '40sp'
+                            on_release: app.gps_zipcode()
+
+                Button:
+                    text: 'Get Available Systems'
+                    size_hint_y: None
+                    height: '40dp'
+                    on_release: app.update_rr_import_spinner(zipcode.text)
+
+                Spinner:
+                    id: import_system_spinner
+                    text: "Select a System"
+                    values: []
+                    size_hint_y: None
+                    height: "40dp"
+                    opacity: 0 # This will be updated in python once systems are loaded
+
+                Button:
+                    id: download_system_button
+                    text: 'Download System'
+                    size_hint_y: None
+                    height: '40dp'
+                    on_release: app.download_rr_system(import_system_spinner.text)
+                    opacity: 0 # Updated by rr_import_spinner
+
+
+                Widget:
+                    size_hint_y: 0.5

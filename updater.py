@@ -9,6 +9,12 @@ config = configure.Configure('resources/config/config.ini')
 op25_ip = config.get(section='RCH', option='op25_ip')
 mch_port = config.get(section='RCH', option='mch_port')
 
+sdr = config.get(section='SDR', option='sdr')
+if 'RTL-SDR' in sdr:
+    sdr = 'rtl'
+samplerate = config.get(section='SDR', option='samplerate')
+gain = config.get(section='SDR', option='gain')
+
 
 class OP25Client:
     def __init__(self, url, callback):
@@ -85,19 +91,23 @@ class OP25Client:
                         "fine_tune": item.get("fine_tune"),
                         "files": item.get("files"),
                     }
-
             return latest_values
 
         except Exception as e:
-            print("An error occurred while fetching latest values:", e)
+            #print("An updater.py error occurred while fetching latest values:", e)
+            #return {'change_freq': {'freq': 772731250, 'tgid': None, 'offset': 0, 'tag': '', 'nac': 0, 'system': 'CONNFail', 'center_frequency': None, 'tdma': None, 'wacn': -1, 'sysid': -1, 'tuner': 0, 'sigtype': 'P25', 'fine_tune': 0.0, 'error': 8, 'stream_url': ''}, 'trunk_update': {'top_line': 'NAC 0x0 WACN 0x-1 SYSID 0x-1 0.000000/0.000000 tsbks 0', 'syid': 0, 'rfid': 0, 'stid': 0, 'sysid': -1, 'rxchan': 0, 'txchan': 0, 'wacn': -1, 'secondary': [], 'frequencies': {}, 'frequency_data': {}, 'last_tsbk': 0, 'tsbks': 0, 'adjacent_data': {}}, 'rx_update': {'error': 8, 'fine_tune': 0.0, 'files': []}}
             return {}
 
     def run_loop(self):
-        self.start_op25()
-        while not self.stop_event.is_set():
-            latest_values = self.get_latest_values()
-            self.callback(latest_values)
-            time.sleep(2)
+        #self.start_op25() # We can start this later outside of the loop
+        try:
+            while not self.stop_event.is_set():
+                latest_values = self.get_latest_values()
+                self.callback(latest_values)
+                time.sleep(2)
+        except:
+            print('DEBUG: Failed to make connection')
+
 
     def send_cmd_to_op25(self, command):
 
@@ -115,19 +125,18 @@ class OP25Client:
             except:
                 return 'FAIL'
 
-    def start_op25(self):
-        try:
-            while not self.stop_event.is_set():
-                response = self.send_cmd_to_op25('HELLO')
-                if 'HELLO' in response:
-                    print(response)
-                    start_response = self.send_cmd_to_op25('START_TEST')
-                    if "ACK" in start_response:
-                        print('Starting OP25')
-                        return "ACK"
-                time.sleep(1)
-        except:
-            pass
+    def manual_start_op25(self):
+        response = self.send_cmd_to_op25('HELLO')
+        if 'HELLO' in response:
+            print(response)
+            start_response = self.send_cmd_to_op25(f'MANUAL_START;{sdr};{gain}')
+            if "ACK" in start_response:
+                print('Starting OP25')
+                return "ACK"
+        else:
+            print('NETWORK FAIL ON MANUAL START')
+            time.sleep(1)
+
 
 
     def start(self):

@@ -19,7 +19,7 @@ package.domain = org.signalseverywhere
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,conf,ttf,ini
+source.include_exts = py,png,jpg,kv,atlas,conf,ttf,ini,csv
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -28,15 +28,16 @@ source.include_exts = py,png,jpg,kv,atlas,conf,ttf,ini
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = tests, bin
+source.exclude_dirs = tests, bin, test_scripts
 
 android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, WAKE_LOCK, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION
+android.wakelock = True
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0.0
+version = 0.0.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -44,7 +45,7 @@ version = 1.0.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3, kivy==2.3.0, https://files.pythonhosted.org/packages/20/81/0b1154f5e581d5910702d9fadb3217f56cb186f72c8b36de0271e7ff9b5c/kivymd-1.2.0.tar.gz, materialyoucolor, exceptiongroup, asyncgui, asynckivy, requests, plyer, android
+requirements = python3, kivy==2.3.0, https://files.pythonhosted.org/packages/20/81/0b1154f5e581d5910702d9fadb3217f56cb186f72c8b36de0271e7ff9b5c/kivymd-1.2.0.tar.gz, materialyoucolor, exceptiongroup, asyncgui, asynckivy, requests, plyer, android, zeep, attrs, requests_file, lxml==5.1.0, isodate, pytz, requests_toolbelt, platformdirs, sqlite3
 p4a.branch = develop
 
 # (str) Custom source folders for requirements

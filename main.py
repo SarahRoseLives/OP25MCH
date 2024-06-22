@@ -1,5 +1,16 @@
-import configparser
+'''### NOTES ###
 
+radioreference.py requires zeep which requires lxml which requires
+sudo apt-get install libxml2-dev libxslt-dev
+in your build environment
+
+buildozer requires
+sudo apt install cython buildozer
+
+
+#############'''
+
+import configparser
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.label import Label
@@ -8,22 +19,33 @@ from kivy.clock import Clock, mainthread
 from kivy.core.text import LabelBase
 from kivy.uix.spinner import Spinner
 from kivy.utils import platform
+from threading import Thread
 from plyer import gps
+import sqlite3
 import time
 import re
 import os
 
 from kivy.uix.screenmanager import Screen
+import csv
+from math import radians, sin, cos, sqrt, atan2
 
+import updater
 # Local Imports
 from updater import OP25Client
 from resources.config import configure
+from radioreference import GetSystems
 
 # Load config file
 config = configure.Configure('resources/config/config.ini')
 
 TIME24 = config.get_bool(section='RCH', option='TIME24')
 darkmode_checkbox = config.get_bool(section='RCH', option='darkmode_checkbox')
+
+# Define global variables
+GLOBAL_lat = None
+GLOBAL_lon = None
+GLOBAL_nearest_zip = None
 GLOBAL_OP25IP = config.get(section='RCH', option='op25_ip')
 GLOBAL_OP25PORT = config.get(section='RCH', option='op25_port')
 GLOBAL_TAGS_ENABLED = False
@@ -68,6 +90,9 @@ class SettingsRRCredentials(Screen):
         else:
             print("Config file not found.")
 
+class SettingsRRImport(Screen):
+    pass
+
 class MainApp(MDApp):
     time_text = StringProperty()
     signal_icon = StringProperty()
@@ -76,6 +101,8 @@ class MainApp(MDApp):
     # GPS Stuff
     gps_location = StringProperty()
     gps_status = StringProperty('Click Start to get GPS location updates')
+
+    zip_code_data = []
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -130,6 +157,8 @@ class MainApp(MDApp):
 
         # This is the updater thread and it runs constant queries to OP25
         self.start_thread()
+        self.op25client.manual_start_op25() # Start default tsv
+
 
         # This is for our GPS
         try:
@@ -143,17 +172,27 @@ class MainApp(MDApp):
         if platform == "android":
             print("gps.py: Android detected. Requesting permissions")
             self.request_android_permissions()
+            self.load_zip_code_data()
 
 
         return root
 
+    def on_start(self):
+        # This is the updater thread and it runs constant queries to OP25
+        self.start_thread()
 
-    # The dark theme is set after the UI loads and is done once on a clock
+
+
+        # The dark theme is set after the UI loads and is done once on a clock
     def delayed_theme_application(self, dt):
         self.theme_cls.theme_style = "Dark"
         # Load OP25 Settings with the theme delay
         self.read_op25_settings()
-
+        '''
+        if platform == "android":
+            # Start GPS Thread
+            self.start(1000, 0)
+        '''
 
     # GPS Permissons for android
     def request_android_permissions(self):
@@ -200,6 +239,63 @@ class MainApp(MDApp):
     def on_sdr_selection(self, spinner, text):
         # Do something when the user selects an SDR option
         print(f"Selected SDR: {text}")
+
+
+    # Update Radio Reference Spinner
+
+    def update_rr_import_spinner(self, zipcode):
+        # Read the configuration file
+        self.config.read('resources/config/rr_credentials.ini')
+
+        # Get the username and password
+        username = self.config.get('RadioReference', 'username')
+        password = self.config.get('RadioReference', 'password')
+
+        client = GetSystems(username=username, password=password)
+
+        systems = client.get_systems_in_county(zip_code=zipcode)
+        print(systems)
+
+        # Update spinner values with system IDs and names
+        self.root.get_screen('SettingsRRImport').ids.import_system_spinner.values = [f"System ID: {system['sid']}, Name: {system['sName']}" for system in systems]
+
+        # Make the spinner visible in the UI
+        self.root.get_screen('SettingsRRImport').ids.import_system_spinner.opacity = 1
+
+        # Make the download system button visible in UI
+        self.root.get_screen('SettingsRRImport').ids.download_system_button.opacity = 1
+
+
+
+    def download_rr_system(self, selection):
+        def run():
+            # Regular expression pattern to extract the system ID
+            pattern = r'System ID: (\d+),'
+
+            # Using re.findall to find all matches of the pattern in the input string
+            matches = re.findall(pattern, selection)
+
+            # Extract the system ID (assuming there's only one match)
+            if matches:
+                system_id = matches[0]
+                # Read the configuration file
+                self.config.read('resources/config/rr_credentials.ini')
+
+                # Get the username and password
+                username = self.config.get('RadioReference', 'username')
+                password = self.config.get('RadioReference', 'password')
+
+                client = GetSystems(username=username, password=password)
+
+                client.create_system_database(system_id)
+                print(f"System ID extracted: {system_id}")
+            else:
+                print("System ID not found.")
+
+        # Create a thread for the run function
+        thread = Thread(target=run)
+        # Start the thread
+        thread.start()
 
     # Update config for local settings
     def update_config(self):
@@ -436,6 +532,94 @@ class MainApp(MDApp):
         label.texture_update()
         return label.texture_size[1]
 
+
+    def gps_zipcode(self):
+        print('DEBUG: You\'re not running android!')
+        if platform == "android":
+            # Start GPS Thread
+            self.start(1000, 0)
+            print(f'TEST: {GLOBAL_lon} {GLOBAL_lon} {GLOBAL_nearest_zip}')
+
+        if GLOBAL_lat is not None and GLOBAL_lon is not None:
+            nearest_zip = self.find_nearest_zip_code(GLOBAL_lat, GLOBAL_lon)
+            self.root.get_screen('SettingsRRImport').ids.zipcode.text = f"{nearest_zip}"
+
+            self.stop()
+
+
+    def load_zip_code_data(self):
+        with open('resources/uszips.csv', newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                self.zip_code_data.append({
+                    'zip': row['zip'],
+                    'lat': float(row['lat']),
+                    'lng': float(row['lng'])
+                })
+
+    def find_nearest_zip_code(self, lat, lng):
+        nearest_zip = None
+        min_distance = float('inf')
+
+        for data in self.zip_code_data:
+            zip_lat = data['lat']
+            zip_lng = data['lng']
+            distance = self.calculate_distance(lat, lng, zip_lat, zip_lng)
+            if distance < min_distance:
+                min_distance = distance
+                nearest_zip = data['zip']
+
+        return nearest_zip
+
+    def calculate_distance(self, lat1, lng1, lat2, lng2):
+        R = 6371.0  # Radius of the Earth in kilometers
+
+        lat1_rad = radians(lat1)
+        lng1_rad = radians(lng1)
+        lat2_rad = radians(lat2)
+        lng2_rad = radians(lng2)
+
+        dlng = lng2_rad - lng1_rad
+        dlat = lat2_rad - lat1_rad
+
+        a = sin(dlat / 2)**2 + cos(lat1_rad) * cos(lat2_rad) * sin(dlng / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        distance = R * c
+        return distance
+
+    # Function to calculate the distance between two GPS coordinates using Haversine formula
+    def haversine_distance(self, lat1, lon1, lat2, lon2):
+        # Convert latitude and longitude from degrees to radians
+        lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+        # Haversine formula
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        # Radius of Earth in kilometers. Use 3956 for miles
+        r = 6371
+        return r * c
+
+    # Function to find the nearest site in the SQLite database
+    def find_nearest_site(self, current_lat, current_lon):
+        conn = sqlite3.connect('resources/systems/6643.db')
+        cursor = conn.cursor()
+        # Query to get all site details
+        cursor.execute("SELECT site_id, latitude, longitude, site_county FROM sites")
+        sites = cursor.fetchall()
+        nearest_site = None
+        min_distance = float('inf')
+        for site in sites:
+            site_id, site_lat, site_lon, site_county = site
+            # Calculate the distance from current location
+            distance = self.haversine_distance(current_lat, current_lon, site_lat, site_lon)
+            if distance < min_distance:
+                min_distance = distance
+                nearest_site = site
+        conn.close()
+        return nearest_site
+
     # More GPS Functions
     def start(self, minTime, minDistance):
         gps.start(minTime, minDistance)
@@ -445,8 +629,16 @@ class MainApp(MDApp):
 
     @mainthread
     def on_location(self, **kwargs):
-        lat = kwargs.get('lat', None)
-        lon = kwargs.get('lon', None)
+        global GLOBAL_lat, GLOBAL_lon, GLOBAL_nearest_zip
+
+        # Update global variables
+        GLOBAL_lat = kwargs.get('lat', None)
+        GLOBAL_lon = kwargs.get('lon', None)
+
+        lat = GLOBAL_lat
+        lon = GLOBAL_lon
+        #lat = kwargs.get('lat', None)
+        #lon = kwargs.get('lon', None)
         speed = kwargs.get('speed', None)
         bearing = kwargs.get('bearing', None)
         altitude = kwargs.get('altitude', None)
@@ -459,6 +651,13 @@ class MainApp(MDApp):
         self.root.get_screen('Main').ids.altitude.text = f"altitude: {altitude}"
         self.root.get_screen('Main').ids.accuracy.text = f"accuracy: {accuracy}"
 
+        if lat is not None and lon is not None:
+            nearest_zip = self.find_nearest_zip_code(lat, lon)
+            self.root.get_screen('Main').ids.nearest_zip.text = f"Nearest ZIP: {nearest_zip}"
+            try:
+                self.root.get_screen('Main').ids.nearest_site.text = f"Nearest Site: {self.find_nearest_site(lat, lon)}"
+            except:
+                print(f'DEBUG: No database')
 
     @mainthread
     def on_status(self, stype, status):
