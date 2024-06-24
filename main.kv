@@ -27,7 +27,7 @@ ScreenManager:
             BoxLayout:
                 orientation: 'vertical'
                 MDLabel:
-                    text: "[font=material]" + app.signal_icon + "[/font]" + app.sdr_info
+                    text: "[font=material]" + app.gps_icon + app.signal_icon + "[/font]" + app.sdr_info
                     markup: True
                     font_size: '30sp'
                     halign: "center"
@@ -1090,19 +1090,32 @@ ScreenManager:
                         on_release: app.update_rr_selected_system(systems_spinner.text)
 
 
-                Label:
-                    text: "Start Auto Site Switching on Boot"
-                    size_hint_y: None
-                    height: "40dp"
-                    halign: "right"
-                    valign: "middle"  # Vertical alignment to center the text vertically
+                    Spinner:
+                        id: sitelock_spinner
+                        text: "Choose a site"
+                        values: ["No Sites for Selected System"]
+                        size_hint_y: None
+                        height: "40dp"
+                        #on_touch_down: app.populate_system_selection_spinner()
 
-                Button:
-                    id: auto_on_boot
-                    text: 'Send Start Command'
-                    size_hint_y: None
-                    height: '40dp'
-                    on_touch_down: app.test_site_switching(systems_spinner.text)
+                    Button:
+                        text: 'Lock to Site'
+                        size_hint_y: None
+                        height: '40dp'
+                        on_release: app.set_sitelock(systems_spinner.text, sitelock_spinner.text)
+
+                    Button:
+                        text: 'Start Auto Site Switching'
+                        size_hint_y: None
+                        height: '40dp'
+                        on_release: app.test_site_switching(systems_spinner.text)
+
+                    Button:
+                        text: 'Stop Auto Site Switching'
+                        size_hint_y: None
+                        height: '40dp'
+                        on_release: app.stop_site_switching()
+
 
                 Widget:
                     size_hint_y: 0.5

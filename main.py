@@ -101,6 +101,7 @@ class SettingsRRSelect(Screen):
 class MainApp(MDApp):
     time_text = StringProperty()
     signal_icon = StringProperty()
+    gps_icon = StringProperty()
     op25_server_address = StringProperty()
 
     # GPS Stuff
@@ -113,7 +114,7 @@ class MainApp(MDApp):
         super().__init__(**kwargs)
         self.op25client = OP25Client(f'http://{GLOBAL_OP25IP}:{GLOBAL_OP25PORT}', self.process_latest_values)
         self.is_active = False  # Flag to control data fetching
-        self.sdr_info = "SDR: RTL | LNA: 48 | SR: 2.e6"  # Initialize the property
+        self.sdr_info = "SDR: N/A | LNA: N/A | SR: N/A"  # Initialize the property
         self.previous_site_id = None
 
         # Spinners are the drop down boxes we use
@@ -166,6 +167,50 @@ class MainApp(MDApp):
 
             except Exception as e:
                 print(f"Error accessing directory: {e}")
+
+    def populate_sitelock_spinner(self, system_id):
+        # Define the path to the directory containing the .db files
+        systems_directory = 'resources/systems/'
+
+        # Construct the full path to the database file
+        db_file_path = os.path.join(systems_directory, f"{system_id}.db")
+
+        # Check if the database file exists
+        if not os.path.isfile(db_file_path):
+            print(f"Database file for system_id {system_id} does not exist.")
+            return None
+
+        # Connect to the SQLite database
+        try:
+            conn = sqlite3.connect(db_file_path)
+            cursor = conn.cursor()
+
+            # Query the Sites table to get site_id and site_county
+            cursor.execute("SELECT site_id, site_county FROM Sites")
+            rows = cursor.fetchall()
+
+            # Create a dictionary to hold site_id and site_county
+            site_dict = {row[0]: row[1] for row in rows}
+
+            # Sort the site_dict by site_county (values)
+            sorted_sites = sorted(site_dict.items(), key=lambda item: item[1])
+
+            # Convert the sorted data to a list of strings for the Spinner
+            spinner_values = [f"{site_id}: {site_county}" for site_id, site_county in sorted_sites]
+
+            # Update spinner values
+            self.root.get_screen('SettingsRRSelect').ids.sitelock_spinner.values = spinner_values
+
+            # Close the connection
+            conn.close()
+
+            return site_dict
+
+        except sqlite3.Error as e:
+            print(f"SQLite error: {e}")
+            return None
+
+
 
 
 
@@ -286,6 +331,16 @@ class MainApp(MDApp):
 
     def update_rr_selected_system(self, selected_system):
         config.set('RR', 'selected_system', selected_system)
+        if platform == 'android':
+            #self.test_site_switching(selected_system)
+            self.populate_sitelock_spinner(selected_system)
+        else:
+            self.populate_sitelock_spinner(selected_system)
+            print('ERROR: Not Running Android')
+
+    def stop_site_switching(self):
+        self.stop() # Stop the GPS
+        self.op25client.stop_op25() # Stop OP25
 
 
     def update_rr_import_spinner(self, zipcode):
@@ -348,6 +403,12 @@ class MainApp(MDApp):
         thread = Thread(target=run)
         # Start the thread
         thread.start()
+
+    def set_sitelock(self, system_id, site_id):
+        match_site = re.match(r"^\d+(?=:)", site_id)[0]
+        self.op25client.send_cmd_to_op25(f'SITELOCK;{system_id};{match_site}')
+
+        self.root.get_screen('Main').ids.system_county.text = site_id
 
     # Update config for local settings
     def update_config(self):
@@ -560,6 +621,12 @@ class MainApp(MDApp):
 
     def update_connection_status(self):
         status = self.root.get_screen('Main').ids.connected_msg.text
+        # Update the SDR Info on Display
+        sdr = config.get(section='SDR', option='sdr')
+        gain = str(config.get(section='SDR', option='gain'))
+        sr = str(config.get(section='SDR', option='samplerate'))
+
+        self.sdr_info = f"SDR: {sdr} | LNA: {gain} | SR: {sr}"
         if self.op25client.connection_successful:
             if 'not connected' in status.lower():
                 self.root.get_screen('Main').ids.connected_msg.text = 'Connected to: OP25'
@@ -691,6 +758,7 @@ class MainApp(MDApp):
     # More GPS Functions
     def start(self, minTime, minDistance):
         gps.start(minTime, minDistance)
+        self.gps_icon = "󰆣"
 
     def stop(self):
         gps.stop()
@@ -723,6 +791,7 @@ class MainApp(MDApp):
 
         if lat is not None and lon is not None:
             nearest_zip = self.find_nearest_zip_code(lat, lon)
+            self.gps_icon = "󰆤"
             self.root.get_screen('Main').ids.nearest_zip.text = f"Nearest ZIP: {nearest_zip}"
             try:
 
