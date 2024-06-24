@@ -91,10 +91,41 @@ add_delay_to_service() {
 install_op25_and_service() {
     echo "Installing OP25 and setting up the mchserver service..."
 
+    # Set the target directory for the virtual environment
+    HOME_DIR=$(eval echo ~$SUDO_USER)
+    TARGET_DIR="$HOME_DIR/op25-gr310/op25/gr-op25_repeater/apps"
+    VENV_DIR="$TARGET_DIR/venv"
+
+    # Create the target directory if it doesn't exist
+    mkdir -p "$TARGET_DIR"
+
+    # Check if python3-venv is installed
+    if ! dpkg -s python3-venv >/dev/null 2>&1; then
+        echo "python3-venv not found. Installing..."
+        sudo apt update
+        sudo apt install -y python3-venv
+    else
+        echo "python3-venv is already installed."
+    fi
+
+    # Create the virtual environment
+    if [ ! -d "$VENV_DIR" ]; then
+        echo "Creating virtual environment in $VENV_DIR"
+        sudo -u $SUDO_USER python3 -m venv "$VENV_DIR"
+    else
+        echo "Virtual environment already exists in $VENV_DIR"
+    fi
+
+    # Activate the virtual environment and install zeep
+    echo "Activating the virtual environment and installing zeep..."
+    sudo -u $SUDO_USER bash -c "source $VENV_DIR/bin/activate && pip install --upgrade pip && pip install zeep"
+
+    echo "Zeep installed successfully in the virtual environment."
+
+    # Continue with OP25 installation
     sudo apt update
     sudo apt install wget unzip screen -y
 
-    HOME_DIR=$(eval echo ~$SUDO_USER)
     sudo -u $SUDO_USER wget https://github.com/SarahRoseLives/op25/archive/refs/heads/gr310.zip -P $HOME_DIR
     sudo -u $SUDO_USER unzip $HOME_DIR/gr310.zip -d $HOME_DIR
     cd $HOME_DIR/op25-gr310
@@ -110,7 +141,7 @@ Description=Listens for commands and executes them from Op25 mobile app
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 $HOME_DIR/op25-gr310/op25/gr-op25_repeater/apps/op25_mchserver.py
+ExecStart=$HOME_DIR/op25-gr310/op25/gr-op25_repeater/apps/venv/bin/python3 $HOME_DIR/op25-gr310/op25/gr-op25_repeater/apps/op25_mchserver.py
 WorkingDirectory=$HOME_DIR/op25-gr310/op25/gr-op25_repeater/apps
 StandardOutput=inherit
 StandardError=inherit
@@ -127,6 +158,7 @@ EOL"
 
     sudo reboot
 }
+
 
 # Function to do everything
 do_everything() {

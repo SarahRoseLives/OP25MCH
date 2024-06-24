@@ -12,6 +12,8 @@ ScreenManager:
         name: 'SettingsRRCredentials'
     SettingsRRImport:
         name: 'SettingsRRImport'
+    SettingsRRSelect:
+        name: 'SettingsRRSelect'
 
 
 
@@ -580,6 +582,17 @@ ScreenManager:
                                 text: "Radio Reference Import"
                                 secondary_text: "Import a System"
                                 on_release: app.root.current = 'SettingsRRImport'
+
+
+                        MDList:
+                            id: list
+                            TwoLineAvatarListItem:
+                                text: "Imported System Selection"
+                                secondary_text: "Select System"
+                                on_release: app.root.current = 'SettingsRRSelect'
+
+
+
                         Widget:
                             size_hint_y: 0.5  # This will push the button down
 
@@ -845,7 +858,22 @@ ScreenManager:
                     text: "Stop OP25"
                     size_hint_y: None
                     height: "40dp"
-                    #on_release: app.op25client.manual_start_op25()
+                    on_release: app.op25client.stop_op25()
+
+                Label:
+                    text: "Start OP25 on Boot"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                MDSwitch:
+                    id: manual_on_boot
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    width: dp(64)
+                    on_touch_down: app.update_op25_settings()
+
+
 
 # Define the SettingsScanGridConfig Screen
 <SettingsScanGridConfig@Screen>:
@@ -1013,6 +1041,68 @@ ScreenManager:
                     on_release: app.download_rr_system(import_system_spinner.text)
                     opacity: 0 # Updated by rr_import_spinner
 
+
+                Widget:
+                    size_hint_y: 0.5
+
+
+<SettingsRRSelect@Screen>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  # Equivalent to #000000 in RGB
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        MDTopAppBar:
+            title: "Select Your System"
+            left_action_items: [["arrow-left", lambda x: app.back_to_main()]]
+
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                padding: [20, 20, 20, 20]
+                spacing: 20
+                size_hint_y: None
+                height: self.minimum_height
+
+                GridLayout:
+                    cols: 2
+                    spacing: 20
+                    size_hint_y: None
+                    height: self.minimum_height
+
+                    Spinner:
+                        id: systems_spinner
+                        text: "Choose a system"
+                        values: ["No Systems Found"]
+                        size_hint_y: None
+                        height: "40dp"
+                        on_touch_down: app.populate_system_selection_spinner()
+
+                    Button:
+                        text: 'Set as Active System'
+                        size_hint_y: None
+                        height: '40dp'
+                        on_release: app.update_rr_selected_system(systems_spinner.text)
+
+
+                Label:
+                    text: "Start Auto Site Switching on Boot"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                Button:
+                    id: auto_on_boot
+                    text: 'Send Start Command'
+                    size_hint_y: None
+                    height: '40dp'
+                    on_touch_down: app.test_site_switching(systems_spinner.text)
 
                 Widget:
                     size_hint_y: 0.5

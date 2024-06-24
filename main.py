@@ -18,6 +18,8 @@ from kivy.properties import StringProperty
 from kivy.clock import Clock, mainthread
 from kivy.core.text import LabelBase
 from kivy.uix.spinner import Spinner
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.dialog import MDDialog
 from kivy.utils import platform
 from threading import Thread
 from plyer import gps
@@ -93,6 +95,9 @@ class SettingsRRCredentials(Screen):
 class SettingsRRImport(Screen):
     pass
 
+class SettingsRRSelect(Screen):
+    pass
+
 class MainApp(MDApp):
     time_text = StringProperty()
     signal_icon = StringProperty()
@@ -109,6 +114,7 @@ class MainApp(MDApp):
         self.op25client = OP25Client(f'http://{GLOBAL_OP25IP}:{GLOBAL_OP25PORT}', self.process_latest_values)
         self.is_active = False  # Flag to control data fetching
         self.sdr_info = "SDR: RTL | LNA: 48 | SR: 2.e6"  # Initialize the property
+        self.previous_site_id = None
 
         # Spinners are the drop down boxes we use
         self.sdr_spinner = Spinner(
@@ -135,7 +141,35 @@ class MainApp(MDApp):
         )
         self.gain_spinner.bind(text=self.on_gain_selection)
 
+    def populate_system_selection_spinner(self):
+        # Define the path to the directory containing the .db files
+        systems_directory = 'resources/systems/'
 
+        # Ensure the directory exists and is accessible
+        if not os.path.exists(systems_directory):
+            print(f"Directory does not exist: {systems_directory}")
+        else:
+            try:
+                # Get the list of .db files and extract the numeric parts
+                system_ids = [
+                    os.path.splitext(file)[0]
+                    for file in os.listdir(systems_directory)
+                    if file.endswith('.db')
+                ]
+
+                # Convert to integers for sorting, then back to strings
+                system_ids = sorted(system_ids, key=int)
+
+                print("System IDs:", system_ids)
+
+                self.root.get_screen('SettingsRRSelect').ids.systems_spinner.values = system_ids # Update spinner values
+
+            except Exception as e:
+                print(f"Error accessing directory: {e}")
+
+
+
+    dialog = None
     def build(self):
         #self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Orange"
@@ -155,9 +189,9 @@ class MainApp(MDApp):
         Clock.schedule_interval(self.update_time, 1)
         Clock.schedule_interval(self.check_status_and_update, 5)
 
-        # This is the updater thread and it runs constant queries to OP25
-        self.start_thread()
-        self.op25client.manual_start_op25() # Start default tsv
+        Clock.schedule_once(lambda dt: self.populate_system_selection_spinner(), 0.1)
+
+
 
 
         # This is for our GPS
@@ -226,6 +260,12 @@ class MainApp(MDApp):
         # Do something when the user selects a gain
         print(f"Selected gain: {text}")
 
+    # Selected System spinner /dropdown
+
+    def on_system_selection(self, spinner, text):
+        # Do something when the user selects a gain
+        print(f"Selected system: {text}")
+
     # Samplerate Spinner / Dropdown
     def on_sample_rate_selection(self, spinner, text):
         if text == "1.4msps":
@@ -240,8 +280,13 @@ class MainApp(MDApp):
         # Do something when the user selects an SDR option
         print(f"Selected SDR: {text}")
 
+    def test_site_switching(self, system_id):
+        # Start the GPS service
+        self.start(1000, 0)
 
-    # Update Radio Reference Spinner
+    def update_rr_selected_system(self, selected_system):
+        config.set('RR', 'selected_system', selected_system)
+
 
     def update_rr_import_spinner(self, zipcode):
         # Read the configuration file
@@ -265,9 +310,12 @@ class MainApp(MDApp):
         # Make the download system button visible in UI
         self.root.get_screen('SettingsRRImport').ids.download_system_button.opacity = 1
 
-
-
     def download_rr_system(self, selection):
+
+        if not self.dialog:
+            self.dialog = MDDialog(text="SYSTEM CREATION STARTED")
+        self.dialog.open()
+
         def run():
             # Regular expression pattern to extract the system ID
             pattern = r'System ID: (\d+),'
@@ -288,6 +336,10 @@ class MainApp(MDApp):
                 client = GetSystems(username=username, password=password)
 
                 client.create_system_database(system_id)
+
+                print('Creating System on Pi')
+                self.op25client.send_cmd_to_op25(f'CREATE_SYSTEM;{username};{password};{system_id}')
+
                 print(f"System ID extracted: {system_id}")
             else:
                 print("System ID not found.")
@@ -314,6 +366,9 @@ class MainApp(MDApp):
         config.set('SDR', 'samplerate', self.root.get_screen('SettingsOP25Config').ids.sample_rate_spinner.text)
         # Save the SDR gain to Config.ini
         config.set('SDR', 'gain', self.root.get_screen('SettingsOP25Config').ids.gain_spinner.text)
+        # Save the manual start on boot option
+        is_active = not self.root.get_screen('SettingsOP25Config').ids.manual_on_boot.active
+        config.set('SDR', 'manualonboot', is_active)
 
         sysname = self.root.get_screen('SettingsOP25Config').ids.op25_config_sysname.text
         cclist = self.root.get_screen('SettingsOP25Config').ids.op25_config_controlchannels.text
@@ -321,6 +376,9 @@ class MainApp(MDApp):
 
         # Take data in the trunk settings fields and send them to the server for updating
         self.op25client.send_cmd_to_op25(command=f'WRITE_TRUNK;sysname={sysname};cclist={cclist};tglist={tglist}')
+
+
+
 
 
     # Read OP25 specific settings
@@ -416,7 +474,16 @@ class MainApp(MDApp):
         self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active = config.get_bool(section='RCH', option='TIME24')
         self.root.get_screen('SettingsLocalConfig').ids.darkmode_checkbox.text = config.get(section='RCH', option='darkmode_checkbox')
 
+        # Get the boolean value
+        manual_on_boot_active = config.get_bool('SDR', 'manualonboot')
 
+        # Set the active state of our switch
+        self.root.get_screen('SettingsOP25Config').ids.manual_on_boot.active = manual_on_boot_active
+
+        # Start manual op25 if value is true
+        if manual_on_boot_active:
+            print("Manual on boot is enabled")
+            self.op25client.manual_start_op25()
 
     def update_time(self, *args):
         if TIME24:
@@ -603,7 +670,8 @@ class MainApp(MDApp):
 
     # Function to find the nearest site in the SQLite database
     def find_nearest_site(self, current_lat, current_lon):
-        conn = sqlite3.connect('resources/systems/6643.db')
+        system_id = config.get(section='RR', option='selected_system')
+        conn = sqlite3.connect(f'resources/systems/{system_id}.db')
         cursor = conn.cursor()
         # Query to get all site details
         cursor.execute("SELECT site_id, latitude, longitude, site_county FROM sites")
@@ -651,11 +719,29 @@ class MainApp(MDApp):
         self.root.get_screen('Main').ids.altitude.text = f"altitude: {altitude}"
         self.root.get_screen('Main').ids.accuracy.text = f"accuracy: {accuracy}"
 
+
+
         if lat is not None and lon is not None:
             nearest_zip = self.find_nearest_zip_code(lat, lon)
             self.root.get_screen('Main').ids.nearest_zip.text = f"Nearest ZIP: {nearest_zip}"
             try:
+
+                system_id = config.get(section='RR', option='selected_system')
+
+                nearest_site_name = self.find_nearest_site(lat, lon)[3]
+                nearest_site_id = self.find_nearest_site(lat, lon)[0]
+
+                # Check if the site id has changed
+                if nearest_site_id != self.previous_site_id:
+                    # Call your function
+                    self.op25client.send_cmd_to_op25(f'START_SYSTEM;{nearest_site_id};{system_id}')
+
+                    # Update the previous site id
+                    self.previous_site_id = nearest_site_id
+
                 self.root.get_screen('Main').ids.nearest_site.text = f"Nearest Site: {self.find_nearest_site(lat, lon)}"
+                self.root.get_screen('Main').ids.system_county.text = nearest_site_name
+
             except:
                 print(f'DEBUG: No database')
 

@@ -137,6 +137,9 @@ class OP25Client:
             print('NETWORK FAIL ON MANUAL START')
             time.sleep(1)
 
+    def stop_op25(self):
+        self.send_cmd_to_op25('STOP_OP25')
+        return "ACK"
 
 
     def start(self):
