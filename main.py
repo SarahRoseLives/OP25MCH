@@ -104,6 +104,14 @@ class MainApp(MDApp):
     gps_icon = StringProperty()
     op25_server_address = StringProperty()
 
+    # Detailed display variables
+    detailed_system_name = StringProperty()
+    detailed_talkgroup = StringProperty()
+    detailed_topline = StringProperty()
+    detailed_radio_id = StringProperty()
+    detailed_talkgroup_id = StringProperty()
+
+
     # GPS Stuff
     gps_location = StringProperty()
     gps_status = StringProperty('Click Start to get GPS location updates')
@@ -341,6 +349,7 @@ class MainApp(MDApp):
     def stop_site_switching(self):
         self.stop() # Stop the GPS
         self.op25client.stop_op25() # Stop OP25
+        self.gps_icon = "󰽅"
 
 
     def update_rr_import_spinner(self, zipcode):
@@ -557,6 +566,7 @@ class MainApp(MDApp):
             latest_values = self.op25client.get_latest_values()
             self.update_signal_icon(latest_values)
             self.update_large_display(latest_values)
+            self.update_detailed_display(latest_values)
             self.update_connection_status()
 
     def update_signal_icon(self, latest_values):
@@ -579,6 +589,71 @@ class MainApp(MDApp):
         except Exception as e:
             print(f"Error updating signal icon: {e}")
 
+
+    def update_detailed_display(self, latest_values):
+        # Check and set 'change_freq' data
+        if 'change_freq' in latest_values:
+            change_freq_data = latest_values['change_freq']
+            freq = change_freq_data.get("freq")
+            tgid = change_freq_data.get("tgid")
+            offset = change_freq_data.get("offset")
+            tag = change_freq_data.get("tag")
+            nac = change_freq_data.get("nac")
+            system = change_freq_data.get("system")
+            center_frequency = change_freq_data.get("center_frequency")
+            tdma = change_freq_data.get("tdma")
+            wacn = change_freq_data.get("wacn")
+            sysid = change_freq_data.get("sysid")
+            tuner = change_freq_data.get("tuner")
+            sigtype = change_freq_data.get("sigtype")
+            fine_tune = change_freq_data.get("fine_tune")
+            error = change_freq_data.get("error")
+            stream_url = change_freq_data.get("stream_url")
+
+
+
+
+
+        # Check and set 'trunk_update' data
+        if 'trunk_update' in latest_values:
+            trunk_update_data = latest_values['trunk_update']
+
+            top_line = trunk_update_data.get("top_line")
+            self.detailed_topline = str(top_line)
+
+            syid = trunk_update_data.get("syid")
+            rfid = trunk_update_data.get("rfid")
+            stid = trunk_update_data.get("stid")
+            sysid = trunk_update_data.get("sysid")
+            grpaddr = trunk_update_data.get("grpaddr")
+            srcaddr = trunk_update_data.get("srcaddr")
+            encrypted = trunk_update_data.get("encrypted")
+            rxchan = trunk_update_data.get("rxchan")
+            txchan = trunk_update_data.get("txchan")
+            wacn = trunk_update_data.get("wacn")
+            secondary = trunk_update_data.get("secondary")
+            frequencies = trunk_update_data.get("frequencies")
+            frequency_data = trunk_update_data.get("frequency_data")
+            last_tsbk = trunk_update_data.get("last_tsbk")
+            tsbks = trunk_update_data.get("tsbks")
+            adjacent_data = trunk_update_data.get("adjacent_data")
+
+            self.detailed_radio_id = str(srcaddr)
+            self.detailed_talkgroup_id = str(grpaddr)
+
+
+
+
+
+        # Check and set 'rx_update' data
+        if 'rx_update' in latest_values:
+            rx_update_data = latest_values['rx_update']
+            error = rx_update_data.get("error")
+            fine_tune = rx_update_data.get("fine_tune")
+            files = rx_update_data.get("files")
+
+
+
     def update_large_display(self, latest_values):
         try:
             if GLOBAL_TAGS_ENABLED:
@@ -589,14 +664,18 @@ class MainApp(MDApp):
                     # Check if current_talkgroup is an empty string
                     if current_talkgroup != "":
                         self.root.get_screen('Main').ids.current_talkgroup.text = str(current_talkgroup)
+                        self.detailed_talkgroup = str(current_talkgroup)
                         self.add_log_entry(str(current_talkgroup))
                     else:
                         self.root.get_screen('Main').ids.current_talkgroup.text = "No Active Call"
+                        self.detailed_talkgroup = "No Active Call"
 
                     if system_name is not None:
                         self.root.get_screen('Main').ids.system_name.text = system_name
+                        self.detailed_system_name = system_name
                 else:
                     self.root.get_screen('Main').ids.current_talkgroup.text = "No Active Call"
+                    self.detailed_talkgroup = "No Active Call"
             else:
                 if latest_values is not None and 'trunk_update' in latest_values:
                     system_name = latest_values['change_freq'].get('system')
@@ -608,14 +687,17 @@ class MainApp(MDApp):
 
                     if system_name is not None:
                         self.root.get_screen('Main').ids.system_name.text = system_name
+                        self.detailed_system_name = system_name
                     if current_talkgroup is not None:
                         if int(current_talkgroup) in active_tgids:
                             self.root.get_screen('Main').ids.current_talkgroup.text = str(current_talkgroup)
                             self.add_log_entry(str(current_talkgroup))
                         else:
                             self.root.get_screen('Main').ids.current_talkgroup.text = "No Active Call"
+                            self.detailed_talkgroup = "No Active Call"
                 else:
                     self.root.get_screen('Main').ids.current_talkgroup.text = "No Active Call"
+                    self.detailed_talkgroup = "No Active Call"
         except Exception as e:
             print(f"Error updating large display: {e}")
 
@@ -648,6 +730,8 @@ class MainApp(MDApp):
     def process_latest_values(self, latest_values):
         Clock.schedule_once(lambda dt: self.update_signal_icon(latest_values))
         Clock.schedule_once(lambda dt: self.update_large_display(latest_values))
+        Clock.schedule_once(lambda dt: self.update_detailed_display(latest_values))
+
 
     def add_log_entry(self, text):
         log_box = self.root.get_screen('Main').ids.log_box

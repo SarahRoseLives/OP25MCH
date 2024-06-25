@@ -42,7 +42,7 @@ class OP25Client:
     def get_latest_values(self):
         try:
             response_data = self.jsoncmd("update", 0, 0)
-
+            #print(response_data)
             if not response_data:
                 return {}
 
@@ -85,12 +85,18 @@ class OP25Client:
                             "tsbks": trunk_update_data.get("tsbks"),
                             "adjacent_data": trunk_update_data.get("adjacent_data"),
                         }
+                    latest_values['trunk_update'].update({
+                        "grpaddr": item.get("grpaddr"),
+                        "encrypted": item.get("encrypted"),
+                        "srcaddr": item.get("srcaddr"),
+                    })
                 elif item.get("json_type") == "rx_update":
                     latest_values['rx_update'] = {
                         "error": item.get("error"),
                         "fine_tune": item.get("fine_tune"),
                         "files": item.get("files"),
                     }
+            #print(latest_values)
             return latest_values
 
         except Exception as e:

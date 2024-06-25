@@ -147,31 +147,31 @@ ScreenManager:
                     padding: dp(10)
 
                     Label:
-                        text: "Pi25 Mobile Control Head A NAC: 0x343 | WACN: 0xbee00 | SYSID: Sys ID: 0x348 "
+                        text: app.detailed_topline
                         text_size: (None, None)
                         size_hint_y: None
                         height: self.texture_size[1]
                         font_size: '20sp'
                     Label:
-                        text: "Laketran CRT"
+                        text: app.detailed_system_name
                         text_size: (None, None)
                         size_hint_y: None
                         height: self.texture_size[1]
                         font_size: '40sp'
                     Label:
-                        text: "OMMRC: Lake"
+                        text: app.detailed_talkgroup
                         text_size: (None, None)
                         size_hint_y: None
                         height: self.texture_size[1]
                         font_size: '40sp'
                     Label:
-                        text: "Radio ID: 4351439"
+                        text: "Radio ID: " + app.detailed_radio_id
                         text_size: (None, None)
                         size_hint_y: None
                         height: self.texture_size[1]
                         font_size: '20sp'
                     Label:
-                        text: "TalkGroup ID: 27684"
+                        text: "TalkGroup ID: " + app.detailed_talkgroup_id
                         text_size: (None, None)
                         size_hint_y: None
                         height: self.texture_size[1]
