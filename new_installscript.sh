@@ -70,7 +70,6 @@ EOF'
     echo "Delay setup complete for hostapd, dnsmasq, and dhcpcd services."
 
     echo "WiFi Hotspot setup complete. SSID: OP25MCH, Password: MobileControlHead"
-
 }
 
 # Function to add delay to service unit file
@@ -98,6 +97,7 @@ install_op25_and_service() {
 
     # Create the target directory if it doesn't exist
     mkdir -p "$TARGET_DIR"
+    chown -R $SUDO_USER:$SUDO_USER "$TARGET_DIR"  # Adjust ownership to the regular user
 
     # Check if python3-venv is installed
     if ! dpkg -s python3-venv >/dev/null 2>&1; then
@@ -111,14 +111,14 @@ install_op25_and_service() {
     # Create the virtual environment
     if [ ! -d "$VENV_DIR" ]; then
         echo "Creating virtual environment in $VENV_DIR"
-        sudo -u $SUDO_USER python3 -m venv "$VENV_DIR"
+        sudo -u $SUDO_USER bash -c "python3 -m venv '$VENV_DIR'"
     else
         echo "Virtual environment already exists in $VENV_DIR"
     fi
 
     # Activate the virtual environment and install zeep
     echo "Activating the virtual environment and installing zeep..."
-    sudo -u $SUDO_USER bash -c "source $VENV_DIR/bin/activate && pip install --upgrade pip && pip install zeep"
+    sudo -u $SUDO_USER bash -c "source '$VENV_DIR/bin/activate' && pip install --upgrade pip && pip install zeep"
 
     echo "Zeep installed successfully in the virtual environment."
 
@@ -158,7 +158,6 @@ EOL"
 
     sudo reboot
 }
-
 
 # Function to do everything
 do_everything() {

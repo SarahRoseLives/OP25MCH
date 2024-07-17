@@ -27,10 +27,10 @@ As I learn more about Kivy I've been wanting to re-write the application and re-
 ```
 wget https://raw.githubusercontent.com/SarahRoseLives/OP25MCH/master/new_installscript.sh
 chmod +x new_installscript.sh
-./new_installscript.sh
-
-Run Options 2 and 3. Only 1 if you need to update pi firmware.
+sudo ./new_installscript.sh
 ```
+Run Options 2 and 3. Only 1 if you need to update pi firmware.
+
 
 
 
