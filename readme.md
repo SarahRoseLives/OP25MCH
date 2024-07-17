@@ -52,14 +52,13 @@ Run Options 2 and 3. Only 1 if you need to update pi firmware.
 * Pi volume adjustment from large display
 * Ability to configure basic trunk.tsv from within app
 * Some Moc info
+* Radio Reference Importing
+* Automatic Site Switching Within a System
+
 
 ## Future Features
 
-* Automatic system switching
-* Radio Reference Importing
-* Automatic Site Switching Within a System
 * "ScanGrid" Allowing you to set channels to scan specifically on the fly
-* A docker server instance to handle op25 and custom commands to implement above features
 
 ## Credits
 
