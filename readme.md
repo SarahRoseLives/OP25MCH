@@ -47,13 +47,12 @@ Run Options 2 and 3. Only 1 if you need to update pi firmware.
 * Basic display with talkgroup and system name details
 * Garbage signals icon based on tsbks (don't pay it any mind... it's crap)
 * Basic config options for OP25 Instance and Clock Options (Restart to Take Effect)
-* GPS Demo in prep for site switching
 * Radio Reference UI;Still Working on importing
 * Pi volume adjustment from large display
 * Ability to configure basic trunk.tsv from within app
 * Some Moc info
 * Radio Reference Importing
-* Automatic Site Switching Within a System
+* Automatic GPS Site Switching Within a System
 
 
 ## Future Features
@@ -64,8 +63,11 @@ Run Options 2 and 3. Only 1 if you need to update pi firmware.
 
 * BoatBod - OP25 Fork - https://github.com/boatbod/op25/tree/gr310
 * SimpleMaps - ZipCode Database - https://simplemaps.com/data/us-zips
+* Plyer - GPS Functionality - https://github.com/kivy/plyer
+* Kivy - Mobile App Framework - https://github.com/kivy/kivy
 
-## Support Me and Development
+
+## Support Development
 I'm putting a lot of time into this application, any support would be greatly appreciated.
 https://www.patreon.com/SarahRoseLives
 

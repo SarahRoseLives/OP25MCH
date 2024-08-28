@@ -1,0 +1,67 @@
+name: Build Kivy App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          python3-pip \
+          build-essential \
+          git \
+          zip \
+          zlib1g-dev \
+          libncurses5-dev \
+          libgdbm-dev \
+          libc6-dev \
+          libsqlite3-dev \
+          libreadline-dev \
+          libssl-dev \
+          libbz2-dev \
+          libffi-dev \
+          liblzma-dev \
+          libgstreamer1.0-dev \
+          gstreamer1.0-plugins-base \
+          gstreamer1.0-plugins-good \
+          gstreamer1.0-plugins-ugly \
+          gstreamer1.0-libav \
+          gstreamer1.0-tools \
+          gstreamer1.0-x \
+          cython \
+          libgl1-mesa-dev \
+          libgles2-mesa-dev \
+          openjdk-8-jdk-headless
+
+    - name: Install Buildozer
+      run: pip install buildozer
+
+    - name: Install Android SDK and NDK
+      run: buildozer android setup
+
+    - name: Build APK
+      run: buildozer -v android debug
+
+    - name: Upload APK to Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: OP25MCH-apk
+        path: bin/*.apk
