@@ -3,13 +3,7 @@
 
 name: Android Build
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [workflow_dispatch, push]
 
 jobs:
   build:
