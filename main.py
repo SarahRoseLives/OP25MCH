@@ -42,7 +42,7 @@ from radioreference import GetSystems
 config = configure.Configure('resources/config/config.ini')
 
 TIME24 = config.get_bool(section='RCH', option='TIME24')
-darkmode_checkbox = config.get_bool(section='RCH', option='darkmode_checkbox')
+scanmode_checkbox = config.get_bool(section='RCH', option='scanmode_checkbox')
 
 # Define global variables
 GLOBAL_lat = None
@@ -124,6 +124,8 @@ class MainApp(MDApp):
         self.is_active = False  # Flag to control data fetching
         self.sdr_info = "SDR: N/A | LNA: N/A | SR: N/A"  # Initialize the property
         self.previous_site_id = None
+        self.last_log_entry = None
+        self.last_log_time = 0
 
         # Spinners are the drop down boxes we use
         self.sdr_spinner = Spinner(
@@ -220,9 +222,9 @@ class MainApp(MDApp):
 
 
 
-
-
     dialog = None
+
+
     def build(self):
         #self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Orange"
@@ -267,6 +269,9 @@ class MainApp(MDApp):
     def on_start(self):
         # This is the updater thread and it runs constant queries to OP25
         self.start_thread()
+        self.check_existance_of_scangrid_database()
+        self.populate_scangrid()
+        self.update_scangrid_config()
 
 
 
@@ -414,6 +419,9 @@ class MainApp(MDApp):
         thread.start()
 
     def set_sitelock(self, system_id, site_id):
+        # Before we lock the site we must ensure the GPS functionality is disabled as that controls site switching directly
+        self.stop()
+
         match_site = re.match(r"^\d+(?=:)", site_id)[0]
         self.op25client.send_cmd_to_op25(f'SITELOCK;{system_id};{match_site}')
 
@@ -425,7 +433,7 @@ class MainApp(MDApp):
         config.set('RCH', 'op25_ip', self.root.get_screen('SettingsLocalConfig').ids.op25_ip_textbox.text)
         config.set('RCH', 'op25_port', self.root.get_screen('SettingsLocalConfig').ids.op25_port_textbox.text)
         config.set('RCH', 'mch_port', self.root.get_screen('SettingsLocalConfig').ids.mch_port_textbox.text)
-        config.set('RCH', 'darkmode_checkbox', str(self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active))
+        config.set('RCH', 'scanmode_checkbox', str(self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active))
 
 
     # Update OP25 Specific settings
@@ -437,8 +445,12 @@ class MainApp(MDApp):
         # Save the SDR gain to Config.ini
         config.set('SDR', 'gain', self.root.get_screen('SettingsOP25Config').ids.gain_spinner.text)
         # Save the manual start on boot option
-        is_active = not self.root.get_screen('SettingsOP25Config').ids.manual_on_boot.active
+        is_active = self.root.get_screen('SettingsOP25Config').ids.manual_on_boot.active
         config.set('SDR', 'manualonboot', is_active)
+        # Save the system scan mode option
+        is_active = self.root.get_screen('SettingsOP25Config').ids.scanmode_checkbox.active
+        config.set('RCH', 'scanmode_checkbox', is_active)
+
 
         sysname = self.root.get_screen('SettingsOP25Config').ids.op25_config_sysname.text
         cclist = self.root.get_screen('SettingsOP25Config').ids.op25_config_controlchannels.text
@@ -483,6 +495,7 @@ class MainApp(MDApp):
             self.root.get_screen('SettingsOP25Config').ids.op25_config_sysname.text = sysname
             self.root.get_screen('SettingsOP25Config').ids.op25_config_controlchannels.text = cclist
             self.root.get_screen('SettingsOP25Config').ids.op25_config_talkgroup_list.text = tglist
+            self.add_log_entry('Read OP25 Settings from Server')
         else:
             print("ERROR: Unable to read trunk from server")
 
@@ -542,7 +555,9 @@ class MainApp(MDApp):
         self.root.get_screen('SettingsLocalConfig').ids.op25_port_textbox.text = config.get(section='RCH', option='op25_port')
         self.root.get_screen('SettingsLocalConfig').ids.mch_port_textbox.text = config.get(section='RCH', option='mch_port')
         self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active = config.get_bool(section='RCH', option='TIME24')
-        self.root.get_screen('SettingsLocalConfig').ids.darkmode_checkbox.text = config.get(section='RCH', option='darkmode_checkbox')
+
+
+        self.root.get_screen('SettingsOP25Config').ids.scanmode_checkbox.active = config.get_bool(section='RCH', option='scanmode_checkbox')
 
         # Get the boolean value
         manual_on_boot_active = config.get_bool('SDR', 'manualonboot')
@@ -732,16 +747,25 @@ class MainApp(MDApp):
         Clock.schedule_once(lambda dt: self.update_large_display(latest_values))
         Clock.schedule_once(lambda dt: self.update_detailed_display(latest_values))
 
-
     def add_log_entry(self, text):
+        current_time = time.time()
+        # Check for duplication within 2 seconds
+        if self.last_log_entry == text and (current_time - self.last_log_time) < 2:
+            return
+
         log_box = self.root.get_screen('Main').ids.log_box
-        stamped_text = f'{time.time()}: {text}'
+        stamped_text = f'{current_time}: {text}'
         new_label = Label(text=stamped_text, font_size='20sp', size_hint_y=None,
                           height=self.calculate_text_height(stamped_text))
         log_box.add_widget(new_label)
+
         # Adjust the height of the log_box to accommodate the new entry
         log_box.height = sum(child.height for child in log_box.children)
         self.root.get_screen('Main').ids.log_scrollview.scroll_y = 1  # Scroll to the top
+
+        # Update the last log entry and timestamp
+        self.last_log_entry = text
+        self.last_log_time = current_time
 
     @staticmethod
     def calculate_text_height(text):
@@ -915,6 +939,175 @@ class MainApp(MDApp):
         self.root.current = 'Main'
 
 
+
+
+    def send_active_buttons_to_whitelist(self):
+        db_file = 'resources/config/scangrid.db'
+
+        # Connect to the SQLite database
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        try:
+            # Query to get all buttons in the "down" state
+            cursor.execute("SELECT text, tgid FROM buttons WHERE state = 'down'")
+
+            # Fetch all results
+            active_buttons = cursor.fetchall()
+
+            # Prepare a list to hold formatted strings
+            formatted_buttons = []
+
+            # Store text and tgid in variables
+            for button in active_buttons:
+                text, tgid = button
+                # Get the first line of text before \r\n
+                text = text.split('\r\n')[0]
+                # Append the formatted string to the list
+                formatted_buttons.append(f"{tgid}:{text}")
+
+            # Join the formatted strings with ';' and print the result
+            result = ";".join(formatted_buttons)
+            print(result)
+            # NOTE: We need to send the selected system id too
+            #self.op25client.send_cmd_to_op25(command=f'WRITE_WHITELIST;{result}')
+
+
+        finally:
+            # Ensure the connection is closed properly
+            conn.close()
+
+    def check_existance_of_scangrid_database(self):
+        # Check if the database file exists, if not, create it and create the table
+        db_file = 'resources/config/scangrid.db'
+        if not os.path.exists(db_file):
+            conn = sqlite3.connect(db_file)
+            cursor = conn.cursor()
+            cursor.execute('''
+                CREATE TABLE buttons (
+                    id TEXT PRIMARY KEY,
+                    state TEXT,
+                    text TEXT,
+                    tgid INTEGER
+                )
+            ''')
+            conn.commit()
+            conn.close()
+            self.check_button_states()
+
+    def check_button_states(self):
+        db_file = 'resources/config/scangrid.db'
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        for i in range(1, 55):
+            button_id = f'button{i}'
+            button = self.root.get_screen('Main').ids.get(button_id)
+            if button:
+                state = 'down' if button.state == 'down' else 'normal'
+                # Check if the button already exists in the database
+                cursor.execute('SELECT id FROM buttons WHERE id = ?', (button_id,))
+                if cursor.fetchone():
+                    # Update existing button's state only
+                    cursor.execute('UPDATE buttons SET state = ? WHERE id = ?', (state, button_id))
+                else:
+                    # Insert new button with state and text
+                    text = button.text.strip()  # Get the original button text
+                    cursor.execute('INSERT INTO buttons (id, state, text, tgid) VALUES (?, ?, ?, ?)',
+                                   (button_id, state, text, 0))
+
+        conn.commit()
+        conn.close()
+
+        # Display the states in the console
+        for i in range(1, 55):
+            button_id = f'button{i}'
+            button = self.root.get_screen('Main').ids.get(button_id)
+            if button:
+                state = 'down' if button.state == 'down' else 'normal'
+                print(f'{button_id}: {state}')
+
+        self.send_active_buttons_to_whitelist()
+
+    def update_scangrid(self, dec, alpha, button):
+        db_file = 'resources/config/scangrid.db'
+
+        # Convert button integer to the corresponding id in the database
+        button_id = f'button{button}'
+
+        # Connect to the SQLite database
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        # Check if the tgid already exists for the given button_id
+        cursor.execute("SELECT tgid FROM buttons WHERE id = ?", (button_id,))
+        existing_tgid = cursor.fetchone()
+
+        if existing_tgid is None:
+            # If it doesn't exist, insert the new values
+            sql_insert_query = """INSERT INTO buttons (id, tgid, text) VALUES (?, ?, ?)"""
+            cursor.execute(sql_insert_query, (button_id, dec, alpha))  # Use 'alpha' directly for text
+        else:
+            # If it exists, update the values
+            sql_update_query = """UPDATE buttons SET tgid = ?, text = ? WHERE id = ?"""
+            cursor.execute(sql_update_query, (dec, alpha, button_id))  # Use 'alpha' directly for text
+
+        # Commit the changes and close the connection
+        conn.commit()
+        conn.close()
+
+        self.populate_scangrid()
+
+    def populate_scangrid(self):
+        db_file = 'resources/config/scangrid.db'
+
+        if not os.path.exists(db_file):
+            print("Database file does not exist.")
+            return
+
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, state, tgid, text FROM buttons')
+
+        for row in cursor.fetchall():
+            button_id, state, tgid, text = row
+            button = self.root.get_screen('Main').ids.get(button_id)
+            if button:
+                button.state = state
+                button.text = f"{text}\r\n{tgid}"
+
+        conn.close()
+
+    def update_scangrid_config(self):
+        db_file = 'resources/config/scangrid.db'
+
+        if not os.path.exists(db_file):
+            print("Database file does not exist.")
+            return
+
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, state, tgid, text FROM buttons')
+
+        # Fetch all results from the cursor
+        results = cursor.fetchall()
+
+        # Iterate through the results and update the textboxes
+        for row in results:
+            id, state, tgid, text = row
+            button_number = int(id.replace('button', ''))  # Extract the button number from the id
+
+            # Update the corresponding textboxes
+            if 1 <= button_number <= 54:  # Ensure the button number is within the valid range
+                self.root.get_screen('SettingsScanGridConfig').ids[f'scan_decimal_textbox{button_number}'].text = str(
+                    tgid)
+                self.root.get_screen('SettingsScanGridConfig').ids[f'scan_alpha_textbox{button_number}'].text = text
+
+        conn.close()
+
+
 if __name__ == '__main__':
     app = MainApp()
     app.run()
+
+

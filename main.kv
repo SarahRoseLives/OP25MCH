@@ -1,5 +1,9 @@
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
+#:import CardTransition kivy.uix.screenmanager.CardTransition
 ScreenManager:
     id: screen_manager
+    transition: FadeTransition()
     Main:
         name: 'Main'
     SettingsOP25Config:
@@ -251,7 +255,7 @@ ScreenManager:
                     tab_width: self.width / len(self.tab_list)
 
                     TabbedPanelItem:
-                        text: 'Tab 1'
+                        text: '1-9'
                         GridLayout:
                             cols: 3
                             rows: 4
@@ -259,25 +263,43 @@ ScreenManager:
                             padding: 10
                             ToggleButton:
                                 text: 'Button 1'
+                                id: button1
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 2'
+                                id: button2
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 3'
+                                id: button3
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 4'
+                                id: button4
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 5'
+                                id: button5
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 6'
+                                id: button6
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 7'
+                                id: button7
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 8'
+                                id: button8
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 9'
+                                id: button9
+                                on_release: app.check_button_states()
 
                     TabbedPanelItem:
-                        text: 'Tab 2'
+                        text: '10-18'
                         GridLayout:
                             cols: 3
                             rows: 4
@@ -285,25 +307,43 @@ ScreenManager:
                             padding: 10
                             ToggleButton:
                                 text: 'Button 10'
+                                id: button10
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 11'
+                                id: button11
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 12'
+                                id: button12
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 13'
+                                id: button13
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 14'
+                                id: button14
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 15'
+                                id: button15
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 16'
+                                id: button16
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 17'
+                                id: button17
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 18'
+                                id: button18
+                                on_release: app.check_button_states()
 
                     TabbedPanelItem:
-                        text: 'Tab 3'
+                        text: '19-27'
                         GridLayout:
                             cols: 3
                             rows: 4
@@ -311,25 +351,43 @@ ScreenManager:
                             padding: 10
                             ToggleButton:
                                 text: 'Button 19'
+                                id: button19
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 20'
+                                id: button20
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 21'
+                                id: button21
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 22'
+                                id: button22
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 23'
+                                id: button23
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 24'
+                                id: button24
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 25'
+                                id: button25
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 26'
+                                id: button26
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 27'
+                                id: button27
+                                on_release: app.check_button_states()
 
                     TabbedPanelItem:
-                        text: 'Tab 4'
+                        text: '28-36'
                         GridLayout:
                             cols: 3
                             rows: 4
@@ -337,25 +395,43 @@ ScreenManager:
                             padding: 10
                             ToggleButton:
                                 text: 'Button 28'
+                                id: button28
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 29'
+                                id: button29
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 30'
+                                id: button30
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 31'
+                                id: button31
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 32'
+                                id: button32
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 33'
+                                id: button33
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 34'
+                                id: button34
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 35'
+                                id: button35
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 36'
+                                id: button36
+                                on_release: app.check_button_states()
 
                     TabbedPanelItem:
-                        text: 'Tab 5'
+                        text: '37-45'
                         GridLayout:
                             cols: 3
                             rows: 4
@@ -363,25 +439,43 @@ ScreenManager:
                             padding: 10
                             ToggleButton:
                                 text: 'Button 37'
+                                id: button37
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 38'
+                                id: button38
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 39'
+                                id: button39
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 40'
+                                id: button40
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 41'
+                                id: button41
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 42'
+                                id: button42
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 43'
+                                id: button43
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 44'
+                                id: button44
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 45'
+                                id: button45
+                                on_release: app.check_button_states()
 
                     TabbedPanelItem:
-                        text: 'Tab 6'
+                        text: '46-54'
                         GridLayout:
                             cols: 3
                             rows: 4
@@ -389,22 +483,41 @@ ScreenManager:
                             padding: 10
                             ToggleButton:
                                 text: 'Button 46'
+                                id: button46
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 47'
+                                id: button47
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 48'
+                                id: button48
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 49'
+                                id: button49
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 50'
+                                id: button50
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 51'
+                                id: button51
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 52'
+                                id: button52
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 53'
+                                id: button53
+                                on_release: app.check_button_states()
                             ToggleButton:
                                 text: 'Button 54'
+                                id: button54
+                                on_release: app.check_button_states()
+
 
 
         MDBottomNavigationItem:
@@ -683,18 +796,12 @@ ScreenManager:
                     id: time24_checkbox
                     size_hint_y: None
                     height: "40dp"
+                    theme_text_color: "Custom"
+                    color_active: "red"
+                    color_inactive: "red"
 
-                Label:
-                    text: "Dark Mode"
-                    size_hint_y: None
-                    height: "40dp"
-                    halign: "right"
-                    valign: "middle"  # Vertical alignment to center the text vertically
 
-                MDCheckbox:
-                    id: darkmode_checkbox
-                    size_hint_y: None
-                    height: "40dp"
+
 
                 Button:
                     text: "Update Config"
@@ -733,7 +840,7 @@ ScreenManager:
                     size_hint_y: None
                     height: "40dp"
                     halign: "right"
-                    valign: "middle"  # Vertical alignment to center the text vertically
+                    valign: "middle"  
 
                 Spinner:
                     id: sdr_spinner
@@ -867,12 +974,30 @@ ScreenManager:
                     halign: "right"
                     valign: "middle"  # Vertical alignment to center the text vertically
 
-                MDSwitch:
+                MDCheckbox:
                     id: manual_on_boot
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     width: dp(64)
+                    theme_text_color: "Custom"
+                    color_active: "red"
+                    color_inactive: "red"
                     on_touch_down: app.update_op25_settings()
 
+                Label:
+                    text: "System Scan Mode"
+                    size_hint_y: None
+                    height: "40dp"
+                    halign: "right"
+                    valign: "middle"  # Vertical alignment to center the text vertically
+
+                MDCheckbox:
+                    id: scanmode_checkbox
+                    size_hint_y: None
+                    height: "40dp"
+                    theme_text_color: "Custom"
+                    color_active: "red"
+                    color_inactive: "red"
+                    on_touch_down: app.update_op25_settings()
 
 
 # Define the SettingsScanGridConfig Screen
@@ -891,7 +1016,1115 @@ ScreenManager:
             title: "ScanGrid Config"
             left_action_items: [["arrow-left", lambda x: app.back_to_main()]]
 
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            padding: [5, 5]
+
+            Label:
+                text: ''
+                size_hint_x: 0.2
+            Label:
+                text: 'Decimal TG ID'
+                size_hint_x: 0.2
+            Label:
+                text: 'Alpha Text'
+                size_hint_x: 0.2
+            Label:
+                text: ''
+                size_hint_x: 0.2
+
         ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+                padding: [10, 10, 10, 10]  # Add padding around the entire BoxLayout
+                spacing: 30  # Add spacing between rows
+
+
+
+                # Row 1
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 1'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox1
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox1
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_1
+                        text: 'Update Button 1'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox1.text, scan_alpha_textbox1.text, 1)
+
+
+                # Row 2
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200  
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 2'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox2
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox2
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_2
+                        text: 'Update Button 2'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox2.text, scan_alpha_textbox2.text, 2)
+
+                # Row 3
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 3'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox3
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox3
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_3
+                        text: 'Update Button 3'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox3.text, scan_alpha_textbox3.text, 3)
+
+                # Row 4
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 4'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox4
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox4
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_4
+                        text: 'Update Button 4'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox4.text, scan_alpha_textbox4.text, 4)
+
+                # Row 5
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 5'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox5
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox5
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_5
+                        text: 'Update Button 5'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox5.text, scan_alpha_textbox5.text, 5)
+
+                # Row 6
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 6'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox6
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox6
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_6
+                        text: 'Update Button 6'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox6.text, scan_alpha_textbox6.text, 6)
+                # Row 7
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 7'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox7
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox7
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_7
+                        text: 'Update Button 7'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox7.text, scan_alpha_textbox7.text, 7)
+
+                # Row 8
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 8'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox8
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox8
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_8
+                        text: 'Update Button 8'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox8.text, scan_alpha_textbox8.text, 8)
+
+                # Row 9
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 9'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox9
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox9
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_9
+                        text: 'Update Button 9'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox9.text, scan_alpha_textbox9.text, 9)
+
+                # Row 10
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 10'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox10
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox10
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_10
+                        text: 'Update Button 10'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox10.text, scan_alpha_textbox10.text, 10)
+
+                # Row 11
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 11'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox11
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox11
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_11
+                        text: 'Update Button 11'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox11.text, scan_alpha_textbox11.text, 11)
+
+                # Row 12
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 12'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox12
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox12
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_12
+                        text: 'Update Button 12'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox12.text, scan_alpha_textbox12.text, 12)
+
+                # Row 13
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 13'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox13
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox13
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_13
+                        text: 'Update Button 13'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox13.text, scan_alpha_textbox13.text, 13)
+
+                # Row 14
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 14'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox14
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox14
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_14
+                        text: 'Update Button 14'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox14.text, scan_alpha_textbox14.text, 14)
+
+                # Row 15
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 15'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox15
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox15
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_15
+                        text: 'Update Button 15'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox15.text, scan_alpha_textbox15.text, 15)
+
+                # Row 16
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 16'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox16
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox16
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_16
+                        text: 'Update Button 16'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox16.text, scan_alpha_textbox16.text, 16)
+
+                # Row 17
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 17'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox17
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox17
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_17
+                        text: 'Update Button 17'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox17.text, scan_alpha_textbox17.text, 17)
+
+                # Row 18
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 18'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox18
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox18
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_18
+                        text: 'Update Button 18'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox18.text, scan_alpha_textbox18.text, 18)
+
+                # Row 19
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 19'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox19
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox19
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_19
+                        text: 'Update Button 19'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox19.text, scan_alpha_textbox19.text, 19)
+
+                # Row 20
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 20'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox20
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox20
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_20
+                        text: 'Update Button 20'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox20.text, scan_alpha_textbox20.text, 20)
+
+                # Row 21
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 21'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox21
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox21
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_21
+                        text: 'Update Button 21'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox21.text, scan_alpha_textbox21.text, 21)
+
+                # Row 22
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 22'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox22
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox22
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_22
+                        text: 'Update Button 22'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox22.text, scan_alpha_textbox22.text, 22)
+
+                # Row 23
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 23'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox23
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox23
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_23
+                        text: 'Update Button 23'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox23.text, scan_alpha_textbox23.text, 23)
+
+                # Row 24
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 24'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox24
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox24
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_24
+                        text: 'Update Button 24'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox24.text, scan_alpha_textbox24.text, 24)
+
+                # Row 25
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 25'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox25
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox25
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_25
+                        text: 'Update Button 25'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox25.text, scan_alpha_textbox25.text, 25)
+
+                # Row 26
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 26'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox26
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox26
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_26
+                        text: 'Update Button 26'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox26.text, scan_alpha_textbox26.text, 26)
+
+                # Row 27
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 27'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox27
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox27
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_27
+                        text: 'Update Button 27'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox27.text, scan_alpha_textbox27.text, 27)
+
+                # Row 28
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 28'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox28
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox28
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_28
+                        text: 'Update Button 28'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox28.text, scan_alpha_textbox28.text, 28)
+
+                # Row 29
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 29'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox29
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox29
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_29
+                        text: 'Update Button 29'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox29.text, scan_alpha_textbox29.text, 29)
+
+                # Row 30
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 30'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox30
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox30
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_30
+                        text: 'Update Button 30'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox30.text, scan_alpha_textbox30.text, 30)
+
+                # Row 31
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 31'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox31
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox31
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_31
+                        text: 'Update Button 31'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox31.text, scan_alpha_textbox31.text, 31)
+
+                # Row 32
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 32'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox32
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox32
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_32
+                        text: 'Update Button 32'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox32.text, scan_alpha_textbox32.text, 32)
+
+                # Row 33
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 33'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox33
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox33
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_33
+                        text: 'Update Button 33'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox33.text, scan_alpha_textbox33.text, 33)
+
+                # Row 34
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 34'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox34
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox34
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_34
+                        text: 'Update Button 34'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox34.text, scan_alpha_textbox34.text, 34)
+
+                # Row 35
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 35'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox35
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox35
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_35
+                        text: 'Update Button 35'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox35.text, scan_alpha_textbox35.text, 35)
+                # Row 36
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 36'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox36
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox36
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_36
+                        text: 'Update Button 36'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox36.text, scan_alpha_textbox36.text, 36)
+
+                # Row 37
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 37'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox37
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox37
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_37
+                        text: 'Update Button 37'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox37.text, scan_alpha_textbox37.text, 37)
+
+                # Row 38
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 38'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox38
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox38
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_38
+                        text: 'Update Button 38'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox38.text, scan_alpha_textbox38.text, 38)
+
+                # Row 39
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 39'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox39
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox39
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_39
+                        text: 'Update Button 39'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox39.text, scan_alpha_textbox39.text, 39)
+
+                # Row 40
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 40'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox40
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox40
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_40
+                        text: 'Update Button 40'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox40.text, scan_alpha_textbox40.text, 40)
+
+                # Row 41
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 41'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox41
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox41
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_41
+                        text: 'Update Button 41'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox41.text, scan_alpha_textbox41.text, 41)
+
+                # Row 42
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 42'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox42
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox42
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_42
+                        text: 'Update Button 42'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox42.text, scan_alpha_textbox42.text, 42)
+
+                # Row 43
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 43'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox43
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox43
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_43
+                        text: 'Update Button 43'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox43.text, scan_alpha_textbox43.text, 43)
+
+                # Row 44
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 44'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox44
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox44
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_44
+                        text: 'Update Button 44'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox44.text, scan_alpha_textbox44.text, 44)
+
+                # Row 45
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 45'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox45
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox45
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_45
+                        text: 'Update Button 45'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox45.text, scan_alpha_textbox45.text, 45)
+
+                # Row 46
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 46'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox46
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox46
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_46
+                        text: 'Update Button 46'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox46.text, scan_alpha_textbox46.text, 46)
+
+                # Row 47
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 47'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox47
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox47
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_47
+                        text: 'Update Button 47'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox47.text, scan_alpha_textbox47.text, 47)
+
+                # Row 48
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 48'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox48
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox48
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_48
+                        text: 'Update Button 48'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox48.text, scan_alpha_textbox48.text, 48)
+
+                # Row 49
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 49'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox49
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox49
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_49
+                        text: 'Update Button 49'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox49.text, scan_alpha_textbox49.text, 49)
+
+                # Row 50
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 50'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox50
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox50
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_50
+                        text: 'Update Button 50'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox50.text, scan_alpha_textbox50.text, 50)
+
+                # Row 51
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 51'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox51
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox51
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_51
+                        text: 'Update Button 51'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox51.text, scan_alpha_textbox51.text, 51)
+
+                # Row 52
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 52'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox52
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox52
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_52
+                        text: 'Update Button 52'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox52.text, scan_alpha_textbox52.text, 52)
+
+                # Row 53
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 53'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox53
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox53
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_53
+                        text: 'Update Button 53'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox53.text, scan_alpha_textbox53.text, 53)
+
+                # Row 54
+                BoxLayout:
+                    size_hint_y: None
+                    height: 200
+                    padding: [5, 5]
+                    Label:
+                        text: 'Button 54'
+                        size_hint_x: 0.2
+                    TextInput:
+                        id: scan_decimal_textbox54
+                        size_hint_x: 0.3
+                    TextInput:
+                        id: scan_alpha_textbox54
+                        size_hint_x: 0.3
+                    Button:
+                        id: scan_button_54
+                        text: 'Update Button 54'
+                        size_hint_x: 0.2
+                        on_release: app.update_scangrid(scan_decimal_textbox54.text, scan_alpha_textbox54.text, 54)
+
+
+
 
 
 <SettingsRRCredentials@Screen>:

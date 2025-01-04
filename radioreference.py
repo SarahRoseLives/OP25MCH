@@ -137,10 +137,23 @@ class GetSystems:
             for talkgroup in talkgroups:
                 writer.writerow(talkgroup)
 
+        # Create whitelist and blacklist
+        whitelist_file_path = os.path.join(system_folder, f"{system_id}_whitelist.tsv")
+        blacklist_file_path = os.path.join(system_folder, f"{system_id}_blacklist.tsv")
+
+        with open(whitelist_file_path, 'w') as whitelist_file:
+            whitelist_file.write('')
+
+        with open(blacklist_file_path, 'w') as blacklist_file:
+            blacklist_file.write('')
+
     def create_site_tsv_file(self, system_id, site):
         system_folder = self.create_system_folder(system_id)
         site_id = site['siteId']
         file_path = os.path.join(system_folder, f"{system_id}_{site_id}_trunk.tsv")
+
+
+
         control_channels = sorted(
             [freq['freq'] for freq in site['siteFreqs'] if freq['use'] is not None],
             key=lambda freq: (1 if any(f['use'] == 'a' and f['freq'] == freq for f in site['siteFreqs']) else 2)
@@ -153,7 +166,7 @@ class GetSystems:
                 "Blacklist", "Center Frequency"
             ])
             writer.writerow([
-                f"{system_id}", f"{control_channels_str}", "0", "0", "cqpsk", f"systems/{system_id}/{system_id}_talkgroups.tsv", "", "", ""
+                f"{system_id}", f"{control_channels_str}", "0", "0", "cqpsk", f"systems/{system_id}/{system_id}_talkgroups.tsv", f"systems/{system_id}/{system_id}_whitelist.tsv", f"systems/{system_id}/{system_id}_blacklist.tsv", ""
             ])
 
     def create_and_populate_db(self, system_id, sites_info, talkgroups_info):
