@@ -14,7 +14,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-11-jdk python3==3.11.2
+          sudo apt-get install -y git zip unzip openjdk-11-jdk python3.11.2
           pip install --upgrade Cython
 
       - name: Install Buildozer
