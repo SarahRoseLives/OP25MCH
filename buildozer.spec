@@ -45,7 +45,7 @@ version = 0.0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3==3.10, kivy==2.3.0, https://files.pythonhosted.org/packages/20/81/0b1154f5e581d5910702d9fadb3217f56cb186f72c8b36de0271e7ff9b5c/kivymd-1.2.0.tar.gz, materialyoucolor, exceptiongroup, asyncgui, asynckivy, requests, plyer, android, zeep, attrs, requests_file, lxml==5.1.0, isodate, pytz, requests_toolbelt, platformdirs, sqlite3
+requirements = python3==3.10.0, kivy==2.3.0, https://files.pythonhosted.org/packages/20/81/0b1154f5e581d5910702d9fadb3217f56cb186f72c8b36de0271e7ff9b5c/kivymd-1.2.0.tar.gz, materialyoucolor, exceptiongroup, asyncgui, asynckivy, requests, plyer, android, zeep, attrs, requests_file, lxml==5.1.0, isodate, pytz, requests_toolbelt, platformdirs, sqlite3
 p4a.branch = develop
 
 # (str) Custom source folders for requirements
