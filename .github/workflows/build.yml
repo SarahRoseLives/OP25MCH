@@ -1,31 +1,26 @@
 name: Build
-on: [workflow_dispatch, push]
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  # Build job. Builds app for Android with Buildozer
-  build-android:
-    name: Build for Android
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-11-jdk python3 python3-dev
-          pip install --upgrade Cython buildozer
-
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
+      - name: Build APK
+        uses: digreatbrian/buildozer-action@v2
         with:
-          workdir: .
-          buildozer_version: stable
+          python-version: 3.8
+          buildozer-cmd: buildozer -v android debug
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+      - name: Upload APK Artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: package
-          path: ${{ steps.buildozer.outputs.filename }}
+          path: ./bin/*.apk
