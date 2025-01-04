@@ -1,5 +1,6 @@
 ## Remote Control Head
 An Android app that turns OP25 into a full blown mobile scanner.
+[![Android Build](https://github.com/SarahRoseLives/OP25MCH/actions/workflows/build.yml/badge.svg)](https://github.com/SarahRoseLives/OP25MCH/actions/workflows/build.yml)
 
 ## The History
 This is easiy my biggest and most ambitiously complicated project I've ever worked on.
