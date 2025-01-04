@@ -15,11 +15,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y git zip unzip openjdk-11-jdk python3
-          pip install --upgrade Cython
-
-      - name: Install Buildozer
-        run: |
-          pip install buildozer
+          pip install --upgrade Cython buildozer
 
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
