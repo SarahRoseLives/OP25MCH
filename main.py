@@ -42,7 +42,6 @@ from radioreference import GetSystems
 config = configure.Configure('resources/config/config.ini')
 
 TIME24 = config.get_bool(section='RCH', option='TIME24')
-scanmode_checkbox = config.get_bool(section='RCH', option='scanmode_checkbox')
 
 # Define global variables
 GLOBAL_lat = None
@@ -433,7 +432,6 @@ class MainApp(MDApp):
         config.set('RCH', 'op25_ip', self.root.get_screen('SettingsLocalConfig').ids.op25_ip_textbox.text)
         config.set('RCH', 'op25_port', self.root.get_screen('SettingsLocalConfig').ids.op25_port_textbox.text)
         config.set('RCH', 'mch_port', self.root.get_screen('SettingsLocalConfig').ids.mch_port_textbox.text)
-        config.set('RCH', 'scanmode_checkbox', str(self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active))
 
 
     # Update OP25 Specific settings
@@ -447,9 +445,6 @@ class MainApp(MDApp):
         # Save the manual start on boot option
         is_active = self.root.get_screen('SettingsOP25Config').ids.manual_on_boot.active
         config.set('SDR', 'manualonboot', is_active)
-        # Save the system scan mode option
-        is_active = self.root.get_screen('SettingsOP25Config').ids.scanmode_checkbox.active
-        config.set('RCH', 'scanmode_checkbox', is_active)
 
 
         sysname = self.root.get_screen('SettingsOP25Config').ids.op25_config_sysname.text
@@ -459,7 +454,12 @@ class MainApp(MDApp):
         # Take data in the trunk settings fields and send them to the server for updating
         self.op25client.send_cmd_to_op25(command=f'WRITE_TRUNK;sysname={sysname};cclist={cclist};tglist={tglist}')
 
+    def write_systemscan(self, selected_system):
+        self.op25client.send_cmd_to_op25(command=f'WRITE_SCANMODE;system={selected_system};mode=system')
 
+
+    def write_gridscan(self, selected_system):
+        self.op25client.send_cmd_to_op25(command=f'WRITE_SCANMODE;system={selected_system};mode=grid')
 
 
 
@@ -557,7 +557,6 @@ class MainApp(MDApp):
         self.root.get_screen('SettingsLocalConfig').ids.time24_checkbox.active = config.get_bool(section='RCH', option='TIME24')
 
 
-        self.root.get_screen('SettingsOP25Config').ids.scanmode_checkbox.active = config.get_bool(section='RCH', option='scanmode_checkbox')
 
         # Get the boolean value
         manual_on_boot_active = config.get_bool('SDR', 'manualonboot')
@@ -939,8 +938,6 @@ class MainApp(MDApp):
         self.root.current = 'Main'
 
 
-
-
     def send_active_buttons_to_whitelist(self):
         db_file = 'resources/config/scangrid.db'
 
@@ -968,9 +965,13 @@ class MainApp(MDApp):
 
             # Join the formatted strings with ';' and print the result
             result = ";".join(formatted_buttons)
-            print(result)
+
+            config = configparser.ConfigParser()
+            config.read('resources/config/config.ini')
+            selected_system = config.getint('RR', 'selected_system')
+
             # NOTE: We need to send the selected system id too
-            #self.op25client.send_cmd_to_op25(command=f'WRITE_WHITELIST;{result}')
+            self.op25client.send_cmd_to_op25(command=f'WRITE_WHITELIST;{selected_system};{result}')
 
 
         finally:

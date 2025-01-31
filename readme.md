@@ -1,5 +1,6 @@
 ## Remote Control Head
 An Android app that turns OP25 into a full blown mobile scanner.
+
 [![Android Build](https://github.com/SarahRoseLives/OP25MCH/actions/workflows/build.yml/badge.svg)](https://github.com/SarahRoseLives/OP25MCH/actions/workflows/build.yml)
 
 ## The History
@@ -54,11 +55,8 @@ Run Options 2 and 3. Only 1 if you need to update pi firmware.
 * Some Moc info
 * Radio Reference Importing
 * Automatic GPS Site Switching Within a System
-
-
-## Future Features
-
 * "ScanGrid" Allowing you to set channels to scan specifically on the fly
+
 
 ## Credits
 

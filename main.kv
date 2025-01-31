@@ -983,21 +983,7 @@ ScreenManager:
                     color_inactive: "red"
                     on_touch_down: app.update_op25_settings()
 
-                Label:
-                    text: "System Scan Mode"
-                    size_hint_y: None
-                    height: "40dp"
-                    halign: "right"
-                    valign: "middle"  # Vertical alignment to center the text vertically
 
-                MDCheckbox:
-                    id: scanmode_checkbox
-                    size_hint_y: None
-                    height: "40dp"
-                    theme_text_color: "Custom"
-                    color_active: "red"
-                    color_inactive: "red"
-                    on_touch_down: app.update_op25_settings()
 
 
 # Define the SettingsScanGridConfig Screen
@@ -2348,6 +2334,18 @@ ScreenManager:
                         size_hint_y: None
                         height: '40dp'
                         on_release: app.stop_site_switching()
+
+                    Button:
+                        text: "System Scan [Default]"
+                        size_hint_y: None
+                        height: "40dp"
+                        on_release: app.write_systemscan(systems_spinner.text)
+
+                    Button:
+                        text: "Scan Grid Scan"
+                        size_hint_y: None
+                        height: "40dp"
+                        on_release: app.write_gridscan(systems_spinner.text)
 
 
                 Widget:
