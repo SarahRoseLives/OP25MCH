@@ -968,7 +968,11 @@ class MainApp(MDApp):
 
             config = configparser.ConfigParser()
             config.read('resources/config/config.ini')
-            selected_system = config.getint('RR', 'selected_system')
+
+            try:
+                selected_system = config.getint('RR', 'selected_system')
+            except (configparser.NoSectionError, configparser.NoOptionError):
+                selected_system = 0  # Default value if the key is missing or the section is not found
 
             # NOTE: We need to send the selected system id too
             self.op25client.send_cmd_to_op25(command=f'WRITE_WHITELIST;{selected_system};{result}')
